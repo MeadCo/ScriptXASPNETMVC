@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>MeadCoScriptXASPNETMVC</id>
+    <version>2.0.0</version>
+    <title>MeadCo ScriptX Helpers for ASP.NET MVC</title>
+    <authors>Mead and Co Ltd</authors>
+    <owners>Mead and Co Ltd</owners>
+    <projectUrl>http://scriptx.meadroid.com</projectUrl>
+    <licenseUrl>http://scriptx.meadroid.com/knowledge-bank/software-licenses/scriptx-aspnet-mvc-helpers.aspx</licenseUrl>
+    <iconUrl>http://scriptx.meadroid.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The package provides helpers to define the print settings such as headers and footers, margins, paper size etc and for print and preview buttons. In combination the helpers simplify working with ScriptX and provide exemplars for implementing more complex functionality.</description>
+    <summary>Helpers for printing HTML pages using the MeadCo ScriptX Add-on for Internet Explorer in ASP.NET MVC web sites/applications. Please make sure you select the correct package for your project.</summary>
+    <releaseNotes>Initial v8 Release.</releaseNotes>
+    <copyright>Copyright © 2016, Mead &amp; Co Ltd</copyright>
+    <tags>ASPNet WebPages MeadCo ScriptX Print Html WebForms MVC</tags>
+    <dependencies>
+      <dependency id="MeadCoScriptXConfigurationHandler" version="1.9.9" />
+      <dependency id="MeadScriptXJS" version="1.0.2" />
+      <dependency id="Microsoft.AspNet.Web.Optimization" version="1.1.3" />      
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="PackageContent\**\*" target="content"/> 
+  </files>
+</package>

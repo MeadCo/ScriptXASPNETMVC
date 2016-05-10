@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+
+  <meadco>
+    <!-- meadco.scriptx configuration -->    
+    <scriptx>
+      <!--<license guid="[YOUR_LICENSEGUID_HERE]" revision="[YOUR_REVISION_HERE]" filename="~/content/meadco.scriptx/installers/sxlic.mlf" />-->     
+    </scriptx>
+  </meadco>
+
+  <system.webServer>
+    <staticContent>
+      <!-- meadco.scriptx -->    
+      <!-- <mimeMap fileExtension=".mlf" mimeType="application/octet-stream" /> -->      
+    </staticContent>
+  </system.webServer>
+
+</configuration>
