@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MeadCoScriptXASPNETMVC</id>
-    <version>2.0.0</version>
+    <version>$version$</version>
     <title>MeadCo ScriptX Helpers for ASP.NET MVC</title>
     <authors>Mead and Co Ltd</authors>
     <owners>Mead and Co Ltd</owners>
