@@ -9,6 +9,10 @@ using MeadCo.ScriptXClient.Library;
 
 namespace MeadCo.ScriptXClient
 {
+    /// <summary>
+    /// Render the ScriptX objects to the page with required script to install and
+    /// initialise the object with the required print parameters.
+    /// </summary>
     public class ClientPrinting
     {
         /// <summary>
@@ -16,11 +20,11 @@ namespace MeadCo.ScriptXClient
         /// </summary>
         public enum ScriptXHtmlPrintProcessors
         {
-            IE7 = 0,
-            Default = 1,
-            IE55 = 2,
-            Classic = 3,
-            MaxiPT = 4
+            IE7 = 0, // deprecated, do not use
+            Default = 1, // chooses the best template for the version of IE.
+            IE55 = 2, // deprecated, do not use
+            Classic = 3, // the old IE 8 template, can resolve some issues with the newest template with IE11
+            MaxiPT = 4 // deprecated, do not use
         }
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace MeadCo.ScriptXClient
 
         public ClientPrinting()
         {
-            InstallerConfiguration installer = Configuration.ClientInstaller;
+            IMeadCoBinaryBitsProvider installer = ConfigurationProvider.CodebaseProvider;
 
             InstallHelperUrl = installer.InstallHelper;
             HtmlPrintProcessor = ScriptXHtmlPrintProcessors.Default;
@@ -102,7 +106,7 @@ namespace MeadCo.ScriptXClient
             }
 
             LicenseConfiguration lic = Configuration.License;
-            InstallerConfiguration installer = Configuration.ClientInstaller;
+            IMeadCoBinaryBitsProvider installer = ConfigurationProvider.CodebaseProvider;
 
             StringWriter sOut = new StringWriter();
             HtmlTextWriter output = new HtmlTextWriter(sOut);
@@ -111,7 +115,7 @@ namespace MeadCo.ScriptXClient
 
             // if validate is redirect then for this page just output the #Version so we get version checked but dont attempt
             // to install if it is the wrong version or not yet installed - the page redirected to will do that.
-            string codebase = (clientValidationAction == ValidationAction.Redirect ? "" : Url.ResolveUrl(installer.FileName)) + "#Version=" + installer.Version;
+            string codebase = (clientValidationAction == ValidationAction.Redirect ? "" : installer.CodeBase.ToString());
 
             output.AddStyleAttribute("display", "none");
             output.RenderBeginTag(HtmlTextWriterTag.Div);
@@ -175,7 +179,7 @@ namespace MeadCo.ScriptXClient
 
             if (clientValidationAction == ValidationAction.Redirect)
             {
-                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? Url.ResolveUrl(installer.InstallHelper) : installHelper));
+                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? installer.InstallHelper : installHelper));
             }
 
             if (printSettings != null)
