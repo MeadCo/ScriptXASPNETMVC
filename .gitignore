@@ -235,3 +235,5 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 /MeadCo.ScriptXHelpers/Content/MeadCo.ScriptX/installers
+/MeadCo.ScriptXClientReference/Content/MeadCo.ScriptX/installers/scriptx.msi
+/MeadCo.ScriptXClientReference/Content/MeadCo.ScriptX/installers/smsx.cab

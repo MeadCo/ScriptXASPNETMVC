@@ -23,6 +23,11 @@ namespace MeadCo.ScriptXClient.Library
         /// <returns></returns>
         public static StringBuilder BuildInstallOkCode(String sFactoryObjectId, string sRedirectUri)
         {
+            if (string.IsNullOrEmpty((sRedirectUri)))
+            {
+                throw new ArgumentException("A redirect url is required");    
+            }
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("function MeadCo_ScriptX_CheckInstalled() {");

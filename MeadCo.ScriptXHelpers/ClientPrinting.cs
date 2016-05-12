@@ -6,6 +6,7 @@ using System.Web.Optimization;
 using System.Web.UI;
 using MeadCo.ScriptX;
 using MeadCo.ScriptXClient.Library;
+using Microsoft.Ajax.Utilities;
 
 namespace MeadCo.ScriptXClient
 {
@@ -20,11 +21,8 @@ namespace MeadCo.ScriptXClient
         /// </summary>
         public enum ScriptXHtmlPrintProcessors
         {
-            IE7 = 0, // deprecated, do not use
             Default = 1, // chooses the best template for the version of IE.
-            IE55 = 2, // deprecated, do not use
             Classic = 3, // the old IE 8 template, can resolve some issues with the newest template with IE11
-            MaxiPT = 4 // deprecated, do not use
         }
 
         /// <summary>
@@ -125,7 +123,8 @@ namespace MeadCo.ScriptXClient
             {
                 output.AddAttribute("classid", "clsid:" + SMclsid);
 
-                output.AddAttribute("codebase", codebase);
+                if (!string.IsNullOrEmpty(codebase))
+                    output.AddAttribute("codebase", codebase);
 
                 output.AddAttribute(HtmlTextWriterAttribute.Id, "SecMgr");
 
@@ -155,7 +154,7 @@ namespace MeadCo.ScriptXClient
             }
 
             // always output factory
-            if (!isLicensed)
+            if (!isLicensed && !string.IsNullOrEmpty(codebase))
                 output.AddAttribute("codebase", codebase);
 
             output.AddAttribute("classid", "clsid:" + SXclsid);
