@@ -1,4 +1,5 @@
-﻿@{
+﻿@using MeadCo.ScriptXClient
+@{
     ViewBag.Title = "Application Printing";
 }
 
@@ -13,6 +14,14 @@
     <br>
 </p>
 
+@{
+    Html.RenderPartial("InstallUI", new ClientPrinting.InstallUiModel()
+    {
+        LoadingElementId = "InstallStarting",
+        OnSuccess = "installedOK",
+        SuccessElementId = "Content"
+    });
+}
 
 <div id="Content" style="display:none">
     <p id="cont" style="font-weight: bold;"><b>ScriptX v<span id="sxversion"></span></b> has successfully been installed on your machine.</p>

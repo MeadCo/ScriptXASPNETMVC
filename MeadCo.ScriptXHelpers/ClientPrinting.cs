@@ -49,7 +49,7 @@ namespace MeadCo.ScriptXClient
         {
             IMeadCoBinaryBitsProvider installer = ConfigurationProvider.CodebaseProvider;
 
-            InstallHelperUrl = installer.InstallHelper;
+            InstallHelperUrl = installer.InstallHelperUrl;
             HtmlPrintProcessor = ScriptXHtmlPrintProcessors.Default;
             ClientValidate = ValidationAction.None;
         }
@@ -178,7 +178,7 @@ namespace MeadCo.ScriptXClient
 
             if (clientValidationAction == ValidationAction.Redirect)
             {
-                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? installer.InstallHelper : installHelper));
+                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? installer.InstallHelperUrl : installHelper));
             }
 
             if (printSettings != null)
