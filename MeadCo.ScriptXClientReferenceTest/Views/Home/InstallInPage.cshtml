@@ -1,0 +1,32 @@
+﻿@using MeadCo.ScriptXClient
+@{
+    ViewBag.Title = "Install in page";
+}
+
+
+@MeadCo.ScriptXClient.ClientPrinting.GetHtml(clientValidationAction: ClientPrinting.ValidationAction.None,
+    printSettings: new PrintSettings
+    {
+        Footer = "Print Footer: &p of &P",
+        Header = "ScriptX Test"
+    })
+
+<h1>Testing ScriptX Helpers for Razor views</h1>
+<h2>Install in page</h2>
+<div>
+    @MeadCo.ScriptXClient.PrintButton.GetHtml()&nbsp;@MeadCo.ScriptXClient.PrintPreviewButton.GetHtml()
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            console.log("Document is ready");
+            if (MeadCo.ScriptX.Init()) {
+                console.log("ScriptX version " + MeadCo.ScriptX.ScriptXVersion() + " is available");
+            } else {
+                console.log("ScriptX failed to initialise");
+            }
+        });
+    </script>
+}

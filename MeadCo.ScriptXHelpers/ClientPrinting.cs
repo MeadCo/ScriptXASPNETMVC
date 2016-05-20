@@ -49,7 +49,7 @@ namespace MeadCo.ScriptXClient
         {
             IMeadCoBinaryBitsProvider installer = ConfigurationProvider.CodebaseProvider;
 
-            InstallHelperUrl = installer.InstallHelperUrl;
+            InstallHelperUrl = Configuration.ClientInstaller.InstallHelperUrl;
             HtmlPrintProcessor = ScriptXHtmlPrintProcessors.Default;
             ClientValidate = ValidationAction.None;
         }
@@ -113,7 +113,8 @@ namespace MeadCo.ScriptXClient
 
             // if validate is redirect then for this page just output the #Version so we get version checked but dont attempt
             // to install if it is the wrong version or not yet installed - the page redirected to will do that.
-            string codebase = (clientValidationAction == ValidationAction.Redirect ? "" : installer.CodeBase.ToString());
+            string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={installer.Version}"
+                : installer.CodeBase.ToString();
 
             output.AddStyleAttribute("display", "none");
             output.RenderBeginTag(HtmlTextWriterTag.Div);
@@ -178,7 +179,7 @@ namespace MeadCo.ScriptXClient
 
             if (clientValidationAction == ValidationAction.Redirect)
             {
-                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? installer.InstallHelperUrl : installHelper));
+                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? Configuration.ClientInstaller.InstallHelperUrl : installHelper));
             }
 
             if (printSettings != null)

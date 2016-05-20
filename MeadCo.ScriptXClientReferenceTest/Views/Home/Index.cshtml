@@ -1,0 +1,11 @@
+﻿@using MeadCo.ScriptXClient
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1>Testing ScriptX Helpers for Razor views</h1>
+
+<div>
+    @Html.ActionLink("Install in page","InstallInPage",null,new { @class="btn btn-default"})&nbsp;@Html.ActionLink("Install with redirect", "InstallWithRedirect", null, new { @class = "btn btn-default" })
+</div>
+

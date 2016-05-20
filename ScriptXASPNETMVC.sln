@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClient", "MeadCo.ScriptXHelpers\MeadCo.ScriptXClient.csproj", "{BCAAD3ED-F9F4-40A9-907D-0D1973632334}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClientReference", "MeadCo.ScriptXClientReference\MeadCo.ScriptXClientReference.csproj", "{0CBD62D2-B176-4B07-9DDA-357C62561134}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClientReferenceTest", "MeadCo.ScriptXClientReferenceTest\MeadCo.ScriptXClientReferenceTest.csproj", "{0CBD62D2-B176-4B07-9DDA-357C62561134}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClientPackage", "MeadCo.ScriptXClientPackage\MeadCo.ScriptXClientPackage.csproj", "{24D86C39-75CF-4A29-B4A1-EB04C5D7BC6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClientPackageTest", "MeadCo.ScriptXClientPackageTest\MeadCo.ScriptXClientPackageTest.csproj", "{24D86C39-75CF-4A29-B4A1-EB04C5D7BC6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

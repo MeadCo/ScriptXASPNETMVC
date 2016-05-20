@@ -115,7 +115,8 @@ namespace MeadCo.ScriptXClient.Library
             }
 
             sb.AppendLine("} catch (e) { alert(\"Warning - print setup failed: \\n\\n\" + e.message); }");
-            sb.AppendLine(" } }");
+            sb.AppendLine(" } else { console.log(\"Warning : ScriptX failed to initialise in MeadCo_ScriptX_Settings(). Has install failed?\"); } ");
+            sb.AppendLine(" }");
             return sb;
         }
 
