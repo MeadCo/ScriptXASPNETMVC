@@ -4,11 +4,21 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MeadCo.ScriptXClientPackage.Controllers
+namespace MeadCo.ScriptXClientReference.Controllers
 {
     public class HomeController : Controller
     {
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult InstallInPage()
+        {
+            return View();
+        }
+
+        public ActionResult InstallWithRedirect()
         {
             return View();
         }
