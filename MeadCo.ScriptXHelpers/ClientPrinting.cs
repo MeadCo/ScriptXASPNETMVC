@@ -47,8 +47,6 @@ namespace MeadCo.ScriptXClient
 
         public ClientPrinting()
         {
-            IMeadCoBinaryBitsProvider installer = ConfigurationProvider.CodebaseProvider;
-
             InstallHelperUrl = Configuration.ClientInstaller.InstallHelperUrl;
             HtmlPrintProcessor = ScriptXHtmlPrintProcessors.Default;
             ClientValidate = ValidationAction.None;
@@ -88,11 +86,30 @@ namespace MeadCo.ScriptXClient
         /// <param name="printSettings">Settings to be applied before any print.</param>
         /// <param name="clientId">id to assign to the scriptx factory object</param>
         /// <returns></returns>
-        public static HtmlString GetHtml(string installHelper="",
-            ValidationAction clientValidationAction=ValidationAction.None,
-            ScriptXHtmlPrintProcessors htmlPrintProcessor=ScriptXHtmlPrintProcessors.Default,
-            PrintSettings printSettings=null,
-            string clientId="factory")
+        public static HtmlString GetHtml(string installHelper = "",
+            ValidationAction clientValidationAction = ValidationAction.None,
+            ScriptXHtmlPrintProcessors htmlPrintProcessor = ScriptXHtmlPrintProcessors.Default,
+            PrintSettings printSettings = null,
+            string clientId = "factory")
+        {
+            return GetHtml(installHelper,clientValidationAction,htmlPrintProcessor,printSettings,clientId,InstallScope.Machine);    
+        }
+
+        /// <summary>
+        /// Returns object tag(s) declaring license manager and scriptx factory on the page.
+        /// </summary>
+        /// <param name="installHelper">hyperlink to the install helper page</param>
+        /// <param name="clientValidationAction">Action to take if ScriptX is not installed</param>
+        /// <param name="htmlPrintProcessor">Print template to use</param>
+        /// <param name="printSettings">Settings to be applied before any print.</param>
+        /// <param name="clientId">id to assign to the scriptx factory object</param>
+        /// <param name="scope">Use a per machine or per user installer</param>
+        /// <returns></returns>
+        public static HtmlString GetHtml(string installHelper,
+            ValidationAction clientValidationAction,
+            ScriptXHtmlPrintProcessors htmlPrintProcessor,
+            PrintSettings printSettings,
+            string clientId,MeadCo.ScriptX.InstallScope scope)
         {
             // Dependency: Microsoft.aspnet.web.optimization
             // IHtmlString x = System.Web.Optimization.Scripts.Render("/");
@@ -104,17 +121,26 @@ namespace MeadCo.ScriptXClient
             }
 
             LicenseConfiguration lic = Configuration.License;
-            IMeadCoBinaryBitsProvider installer = ConfigurationProvider.CodebaseProvider;
+            bool isLicensed = lic.IsLicensed;
 
             StringWriter sOut = new StringWriter();
             HtmlTextWriter output = new HtmlTextWriter(sOut);
 
-            bool isLicensed = lic.IsLicensed;
-
             // if validate is redirect then for this page just output the #Version so we get version checked but dont attempt
             // to install if it is the wrong version or not yet installed - the page redirected to will do that.
-            string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={installer.Version}"
-                : installer.CodeBase.ToString();
+
+            // find a bits provider for the client processor for the request install scope
+            // if we cant find one then return empty string  - we have nothing that can be installed.
+            IBitsFinder codeBitsFinder = BitsFinder.CodebaseFinder;
+
+            IBitsProvider bitsProvider = codeBitsFinder.FindSingle(scope, Processor);
+            if (bitsProvider == default(IBitsProvider))
+            {
+                return new HtmlString("");
+            }
+
+            string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={bitsProvider.Version}"
+                : bitsProvider.CodeBase.ToString();
 
             output.AddStyleAttribute("display", "none");
             output.RenderBeginTag(HtmlTextWriterTag.Div);
@@ -198,6 +224,19 @@ namespace MeadCo.ScriptXClient
         public HtmlString GetHtml()
         {
             return GetHtml(InstallHelperUrl, ClientValidate, HtmlPrintProcessor,_printSettings,Id);
+        }
+
+        private static MeadCo.ScriptX.MachineProcessor Processor
+        {
+            get
+            {
+                HttpRequest request = System.Web.HttpContext.Current.Request;
+                string agent = request.ServerVariables["HTTP_USER_AGENT"];
+
+                bool isWin64 = agent.Contains("Win64");
+
+                return isWin64 ? MachineProcessor.x64 : MachineProcessor.x86;
+            }
         }
     }
 }

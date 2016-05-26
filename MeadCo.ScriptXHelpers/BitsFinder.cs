@@ -16,13 +16,14 @@ namespace MeadCo.ScriptXClient
     /// MeadCo use this with the samples system to use a provider that accesses
     /// the codestore.
     /// </summary>
-    public static class ConfigurationProvider
+    public static class BitsFinder
     {
-        private static IMeadCoBinaryBitsProvider _provider = null;
-        public static IMeadCoBinaryBitsProvider CodebaseProvider
+        private static IBitsFinder _provider = null;
+        public static IBitsFinder CodebaseFinder
         {
             get { return _provider ?? (_provider = Configuration.ClientInstaller); }
             set { _provider = value; }
         } 
+
     }
 }
