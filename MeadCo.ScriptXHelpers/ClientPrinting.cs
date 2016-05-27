@@ -47,6 +47,7 @@ namespace MeadCo.ScriptXClient
                 ManualInstallers = BitsFinder.CodebaseFinder.Find(Processor).ToDictionary(i => i.Scope, i => i.ManualInstallerDownloadUrl);
 
                 // determine if there is a bits provider for the alternative scope
+                Scope = scope;
                 AlternativeScope = scope == InstallScope.Machine ? InstallScope.User : InstallScope.Machine;
                 if (BitsFinder.CodebaseFinder.FindSingle(AlternativeScope, Processor) == default(IBitsProvider) )
                     AlternativeScope = scope;
