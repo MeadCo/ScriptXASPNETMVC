@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Optimization;
@@ -40,9 +42,44 @@ namespace MeadCo.ScriptXClient
         /// </summary>
         public class InstallUiModel
         {
+            public InstallUiModel(InstallScope scope)
+            {
+                ManualInstallers = BitsFinder.CodebaseFinder.Find(Processor).ToDictionary(i => i.Scope, i => i.ManualInstallerDownloadUrl);
+
+                // determine if there is a bits provider for the alternative scope
+                AlternativeScope = scope == InstallScope.Machine ? InstallScope.User : InstallScope.Machine;
+                if (BitsFinder.CodebaseFinder.FindSingle(AlternativeScope, Processor) == default(IBitsProvider) )
+                    AlternativeScope = scope;
+
+            }
+
+            /// <summary>
+            /// the id of the element displayed while the page is loading
+            /// </summary>
             public string LoadingElementId { get; set; }
+            /// <summary>
+            /// the id of the element to display when installation succeeded
+            /// </summary>
             public string SuccessElementId { get; set; }
+
+            /// <summary>
+            /// name of the javascript method to call when install succeeds
+            /// </summary>
             public string OnSuccess { get; set; }
+
+            /// <summary>
+            /// The installation scope to use on this install attempt
+            /// </summary>
+            public InstallScope Scope { get; private set; }
+
+            /// <summary>
+            /// The available manual installers for the client processor architecture
+            /// Dictionary of scope by download url.
+            /// </summary>
+            public Dictionary<InstallScope,string> ManualInstallers { get; private set; }
+
+            public InstallScope AlternativeScope { get; private set; }
+
         }
 
         public ClientPrinting()
@@ -92,7 +129,17 @@ namespace MeadCo.ScriptXClient
             PrintSettings printSettings = null,
             string clientId = "factory")
         {
-            return GetHtml(installHelper,clientValidationAction,htmlPrintProcessor,printSettings,clientId,InstallScope.Machine);    
+            // determine the install scope to use
+            //
+            // defined as the first available for the client processor ...
+            IBitsProvider provider = BitsFinder.CodebaseFinder.Find(Processor).FirstOrDefault();
+            // no provider for this archicture, then nothing we can do 
+            if (provider == default(IBitsProvider))
+            {
+                return new HtmlString("");
+            }
+
+            return GetHtmlForScope(provider.Scope,installHelper, clientValidationAction, htmlPrintProcessor, printSettings, clientId);    
         }
 
         /// <summary>
@@ -105,11 +152,11 @@ namespace MeadCo.ScriptXClient
         /// <param name="clientId">id to assign to the scriptx factory object</param>
         /// <param name="scope">Use a per machine or per user installer</param>
         /// <returns></returns>
-        public static HtmlString GetHtml(string installHelper,
-            ValidationAction clientValidationAction,
-            ScriptXHtmlPrintProcessors htmlPrintProcessor,
-            PrintSettings printSettings,
-            string clientId,MeadCo.ScriptX.InstallScope scope)
+        public static HtmlString GetHtmlForScope(MeadCo.ScriptX.InstallScope scope,string installHelper = "",
+            ValidationAction clientValidationAction = ValidationAction.None,
+            ScriptXHtmlPrintProcessors htmlPrintProcessor = ScriptXHtmlPrintProcessors.Default,
+            PrintSettings printSettings = null,
+            string clientId = "factory")
         {
             // Dependency: Microsoft.aspnet.web.optimization
             // IHtmlString x = System.Web.Optimization.Scripts.Render("/");
@@ -205,7 +252,7 @@ namespace MeadCo.ScriptXClient
 
             if (clientValidationAction == ValidationAction.Redirect)
             {
-                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? Configuration.ClientInstaller.InstallHelperUrl : installHelper));
+                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? Configuration.ClientInstaller.InstallHelperUrl : installHelper,scope));
             }
 
             if (printSettings != null)
@@ -224,6 +271,16 @@ namespace MeadCo.ScriptXClient
         public HtmlString GetHtml()
         {
             return GetHtml(InstallHelperUrl, ClientValidate, HtmlPrintProcessor,_printSettings,Id);
+        }
+
+        /// <summary>
+        /// Returns the url for attempt to install via codebase in the scope 
+        /// </summary>
+        /// <param name="scope">scope : machine or user</param>
+        /// <returns></returns>
+        public static string GetTryAlternativeInstallerRef(InstallScope scope)
+        {
+            return Configuration.ClientInstaller.InstallHelperUrl + "?scope=" + scope;
         }
 
         private static MeadCo.ScriptX.MachineProcessor Processor

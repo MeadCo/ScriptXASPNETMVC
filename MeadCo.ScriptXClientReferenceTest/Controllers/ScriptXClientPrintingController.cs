@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MeadCo.ScriptX;
+using MeadCo.ScriptXClient;
 
 namespace MeadCo.ScriptXClientReference.Controllers
 {
@@ -23,9 +25,10 @@ namespace MeadCo.ScriptXClientReference.Controllers
         // Note that the View files are linked to those in the package project.
         //
 
-        public ActionResult Install()
+        public ActionResult Install(InstallScope? scope)
         {
-            return View();
+            InstallScope useScope = scope.HasValue ? scope.Value : InstallScope.Machine;
+            return View(useScope);
         }
     }
 }

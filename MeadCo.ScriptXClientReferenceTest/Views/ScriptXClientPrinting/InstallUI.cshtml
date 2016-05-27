@@ -1,5 +1,5 @@
 ﻿@using MeadCo.ScriptXClient
-@model MeadCo.ScriptXClient.ClientPrinting.InstallUiModel
+@model ClientPrinting.InstallUiModel
 
 <div id="MeadCo_ScriptX_installFailure" style="display:none">
     <p>It looks like the install/upgrade has not started yet or has failed.</p>
@@ -29,12 +29,39 @@
     else
     {
         <p><b>Has Internet Explorer notified you?</b></p>
-            <p>If you are using Internet Explorer 9 or later then Internet Explorer will notify you of the attempt to install ScriptX and ask your permission, the notification bar looks like this:</p>
+        <p>If you are using Internet Explorer 9 or later then Internet Explorer will notify you of the attempt to install ScriptX and ask your permission, the notification bar looks like this:</p>
             <p style="padding: 4px"><img id="notificationbarimg" runat="server" src="~/Content/MeadCo.ScriptX/images/notificationbar.png"></p>
             <p>If the bar has appeared, click <i>Install</i> to install ScriptX.</p>
             <p><b>Are you an administrator?</b></p>
             <p>ScriptX is code that requires you have administrator rights on your machine in order to install it successfully.</p>
             <p>If you are not an administrator, please contact your administrator and ask them to install ScriptX for you.</p>
+    }
+
+    @* It failed, offer manual installs if they are available and/or the alternative scope, i.e. if machine, offer user if user, offer machine *@
+    @if (Model.ManualInstallers.Any() || Model.Scope != Model.AlternativeScope)
+    {
+        <p><b>Alternatives:</b></p>
+        if (Model.Scope != Model.AlternativeScope)
+        {
+            <div>
+                <p>An alternative installer is available: <a href="@ClientPrinting.GetTryAlternativeInstallerRef(Model.AlternativeScope)" class="btn btn-sm btn-default">Try installer for @Model.AlternativeScope.ToString()</a>
+                </p>
+                <br/>
+            </div>
+        }
+
+        if (Model.ManualInstallers.Any())
+        {
+            <div>
+                <p>You may be able to install ScriptX yourself using one of these installers. Download the installer to your PC and then run it.</p>
+                <p>
+                    @foreach (var installer in Model.ManualInstallers)
+                    {
+                        <span>Installer for @installer.Key.ToString(): <a href="@installer.Value" class="btn btn-sm btn-default">Download</a>&nbsp;&nbsp;</span>
+                    }
+                </p>
+            </div>
+        }
     }
 </div>
 
@@ -50,33 +77,33 @@
 <script type="text/javascript">
     //<![CDATA[
     var MeadCoInstall = {
-        setDisplayStyle : function(id,value) {
+        setDisplayStyle: function (id, value) {
             var e = document.getElementById(id);
-            if ( e != null )
+            if (e != null)
                 e.style.display = value;
-            },
+        },
 
-        hide : function(id) {
+        hide: function (id) {
             MeadCoInstall.setDisplayStyle(id, "none");
-            },
+        },
 
-        show : function(id) {
+        show: function (id) {
             MeadCoInstall.setDisplayStyle(id, "block");
-            },
+        },
 
-        callBack : function(fn) {
-                fn();
-            },
+        callBack: function (fn) {
+            fn();
+        },
 
-        Retry : function () {
+        Retry: function () {
             location.reload(false);
         },
 
-        CheckScriptXInstall: function() {
+        CheckScriptXInstall: function () {
             MeadCoInstall.hide("@Model.LoadingElementId"); // jquery: $('#wait').hide();
             MeadCoInstall.hide('MeadCo_ScriptX_ActiveXFiltered');
             MeadCoInstall.hide('MeadCo_ScriptX_installFailure');
-            if ( !MeadCo.ScriptX.Init() ) {
+            if (!MeadCo.ScriptX.Init()) {
                 // IE9 or later Filtering enabled?
                 if (typeof window.external.msActiveXFilteringEnabled != "undefined" && window.external.msActiveXFilteringEnabled() == true) {
                     MeadCoInstall.show('MeadCo_ScriptX_ActiveXFiltered');
@@ -101,10 +128,10 @@
     else {
         window.attachEvent("onload", MeadCoInstall.CheckScriptXInstall);
     }
-//]]>
+    //]]>
 </script>
 
-@ClientPrinting.GetHtml(clientValidationAction: ClientPrinting.ValidationAction.None)
+@ClientPrinting.GetHtmlForScope(clientValidationAction: ClientPrinting.ValidationAction.None, scope: Model.Scope)
 
 
 

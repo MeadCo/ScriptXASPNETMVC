@@ -21,7 +21,7 @@ namespace MeadCo.ScriptXClient.Library
         /// <param name="sFactoryObjectId"></param>
         /// <param name="sRedirectUri"></param>
         /// <returns></returns>
-        public static StringBuilder BuildInstallOkCode(String sFactoryObjectId, string sRedirectUri)
+        public static StringBuilder BuildInstallOkCode(String sFactoryObjectId, string sRedirectUri,InstallScope scope)
         {
             if (string.IsNullOrEmpty((sRedirectUri)))
             {
@@ -33,7 +33,7 @@ namespace MeadCo.ScriptXClient.Library
             sb.AppendLine("function MeadCo_ScriptX_CheckInstalled() {");
             sb.AppendLine("var f = document.getElementById(\"" + sFactoryObjectId + "\");");
             sb.AppendLine("if ( f==null || typeof(f)==\"undefined\" || f.object == null ) {");
-            sb.AppendLine("window.location = \"" + sRedirectUri + "\";");
+            sb.AppendLine("window.location = \"" + sRedirectUri + "?scope=" + scope + "\";");
             sb.AppendLine("}");
             sb.AppendLine("}");
             sb.AppendLine("if ( window.addEventListener ) { window.addEventListener('load',MeadCo_ScriptX_CheckInstalled,false); } else { window.attachEvent(\"onload\",MeadCo_ScriptX_CheckInstalled); }");

@@ -1,4 +1,7 @@
 ﻿@using MeadCo.ScriptXClient
+@using MeadCo.ScriptX;
+@model InstallScope
+
 @{
     ViewBag.Title = "Application Printing";
 }
@@ -15,11 +18,11 @@
 </p>
 
 @{
-    Html.RenderPartial("InstallUI", new ClientPrinting.InstallUiModel()
+    Html.RenderPartial("InstallUI", new ClientPrinting.InstallUiModel(Model)
     {
         LoadingElementId = "InstallStarting",
         OnSuccess = "installedOK",
-        SuccessElementId = "Content"
+        SuccessElementId = "Content"        
     });
 }
 
