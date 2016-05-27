@@ -1,5 +1,32 @@
 ﻿@using MeadCo.ScriptXClient
+@using MeadCo.ScriptX
 @model ClientPrinting.InstallUiModel
+
+@helper RenderInstallScope(InstallScope scope)
+{
+switch (scope)
+{
+    case InstallScope.Machine:
+            @("this PC (requires local administrator rights)");
+            break;
+
+        case InstallScope.User:
+            @("you only");
+            break;
+    }
+}
+
+@helper RenderCount(int count)
+{
+if (count > 1)
+{
+        @("one of these installers")
+}
+else
+{
+        @("this installer")
+}
+}
 
 <div id="MeadCo_ScriptX_installFailure" style="display:none">
     <p>It looks like the install/upgrade has not started yet or has failed.</p>
@@ -45,7 +72,7 @@
         {
             <div>
                 <p>
-                    An alternative installer is available: <a href="@ClientPrinting.GetTryAlternativeInstallerRef(Model.AlternativeScope)" class="btn btn-sm btn-default">Try installer for @Model.AlternativeScope.ToString()</a>
+                    An alternative installer is available: <a href="@ClientPrinting.GetTryAlternativeInstallerRef(Model.AlternativeScope)" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-refresh"></span> Try installer for @Model.AlternativeScope.ToString()</a>
                 </p>
                 <br />
             </div>
@@ -54,13 +81,14 @@
         if (Model.ManualInstallers.Any())
         {
             <div>
-                <p>You may be able to install ScriptX yourself using one of these installers. Download the installer to your PC and then run it.</p>
+                <p>You may be able to install ScriptX yourself using @RenderCount(Model.ManualInstallers.Count):</p>
                 <p>
                     @foreach (var installer in Model.ManualInstallers)
                     {
-                        <span>Installer for @installer.Key.ToString(): <a href="@installer.Value" class="btn btn-sm btn-default">Download</a>&nbsp;&nbsp;</span>
+                        <span>Installer for @RenderInstallScope(installer.Key): <a href="@installer.Value" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-download-alt"></span> Download </a>&nbsp;&nbsp;</span>
                     }
                 </p>
+                <p>Download the installer you wish to use to your PC and then run it.</p>
             </div>
         }
     }
