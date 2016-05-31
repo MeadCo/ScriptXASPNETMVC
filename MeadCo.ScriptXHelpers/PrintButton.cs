@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using System.Web.UI;
+using MeadCo.ScriptXClient.Library;
 
 namespace MeadCo.ScriptXClient
 {
@@ -16,8 +17,7 @@ namespace MeadCo.ScriptXClient
     {
         public static HtmlString GetHtml(string text = "Print", bool prompt = true, string frame = null, object htmlAttributes=null)
         {
-            return GetHtml(text, prompt, frame,
-                (IDictionary<string, object>) Library.Helpers.AnonymousObjectToHtmlAttributes(htmlAttributes));
+            return GetHtml(text, prompt, frame,htmlAttributes.ToDictionary());
         }
 
         public static HtmlString GetHtml(string text, bool prompt, string frame, IDictionary<string,object> htmlAttributes)

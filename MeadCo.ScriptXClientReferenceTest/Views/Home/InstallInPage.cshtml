@@ -14,7 +14,7 @@
 <h1>Testing ScriptX Helpers for Razor views</h1>
 <h2>Install in page</h2>
 <div>
-    @MeadCo.ScriptXClient.PrintButton.GetHtml()&nbsp;@MeadCo.ScriptXClient.PrintPreviewButton.GetHtml()
+    @MeadCo.ScriptXClient.PrintButton.GetHtml(htmlAttributes: new { @class="btn btn-default"})&nbsp;@MeadCo.ScriptXClient.PrintPreviewButton.GetHtml(htmlAttributes: new { @class = "btn btn-default" })
 </div>
 
 @section scripts

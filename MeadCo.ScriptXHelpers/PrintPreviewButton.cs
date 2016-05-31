@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using MeadCo.ScriptXClient.Library;
 
 namespace MeadCo.ScriptXClient
 {
@@ -12,8 +13,7 @@ namespace MeadCo.ScriptXClient
     {
         public static HtmlString GetHtml(string text = "Preview ...", string frame = null, object htmlAttributes = null)
         {
-            return GetHtml(text, frame,
-                (IDictionary<string, object>)Library.Helpers.AnonymousObjectToHtmlAttributes(htmlAttributes));
+            return GetHtml(text, frame,htmlAttributes.ToDictionary());
         }
 
         public static HtmlString GetHtml(string text, string frame, IDictionary<string, object> htmlAttributes=null)

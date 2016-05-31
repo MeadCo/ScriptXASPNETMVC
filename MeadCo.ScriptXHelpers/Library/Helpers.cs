@@ -8,25 +8,44 @@ using System.Web.Routing;
 
 namespace MeadCo.ScriptXClient.Library
 {
-    internal class Helpers
+
+    // credit : https://gist.github.com/jarrettmeyer/798667
+
+    /// <summary>
+    /// Convert object to dictionary of properties
+    /// For use with html attributes replaces underscore characters (_) with hyphens (-).
+    /// </summary>
+    internal static class ObjectToDictionaryHelper
     {
-        /// <summary>
-        /// Replaces underscore characters (_) with hyphens (-) in the specified HTML attributes.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// The HTML attributes with underscore characters replaced by hyphens.
-        /// </returns>
-        /// <param name="htmlAttributes">The HTML attributes.</param>
-        internal static RouteValueDictionary AnonymousObjectToHtmlAttributes(object htmlAttributes)
+        public static IDictionary<string, object> ToDictionary(this object source)
         {
-            RouteValueDictionary routeValueDictionary = new RouteValueDictionary();
-            if (htmlAttributes != null)
-            {
-                foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(htmlAttributes))
-                    routeValueDictionary.Add(propertyDescriptor.Name.Replace('_', '-'), propertyDescriptor.GetValue(htmlAttributes));
-            }
-            return routeValueDictionary;
+            return source.ToDictionary<object>();
         }
+
+        public static IDictionary<string, T> ToDictionary<T>(this object source)
+        {
+            if (source == null)
+                return null;
+
+            var dictionary = new Dictionary<string, T>();
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(source))
+                AddPropertyToDictionary<T>(property, source, dictionary);
+
+            return dictionary;
+        }
+
+        private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source, Dictionary<string, T> dictionary)
+        {
+            object value = property.GetValue(source);
+            if (IsOfType<T>(value))
+                dictionary.Add(property.Name.Replace('_', '-'), (T)value);
+        }
+
+        private static bool IsOfType<T>(object value)
+        {
+            return value is T;
+        }
+
     }
+
 }
