@@ -188,7 +188,7 @@ namespace MeadCo.ScriptXClient
             }
 
             string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={bitsProvider.Version}"
-                : bitsProvider.CodeBase.ToString();
+                : bitsProvider.CodeBase;
 
             output.AddStyleAttribute("display", "none");
             output.RenderBeginTag(HtmlTextWriterTag.Div);
@@ -199,7 +199,7 @@ namespace MeadCo.ScriptXClient
                 output.AddAttribute("classid", "clsid:" + SMclsid);
 
                 if (!string.IsNullOrEmpty(codebase))
-                    output.AddAttribute("codebase", codebase);
+                    output.AddAttribute("codebase", codebase,false);
 
                 output.AddAttribute(HtmlTextWriterAttribute.Id, "SecMgr");
 
@@ -216,7 +216,7 @@ namespace MeadCo.ScriptXClient
                 output.RenderEndTag();
 
                 output.AddAttribute(HtmlTextWriterAttribute.Name, "Path");
-                output.AddAttribute(HtmlTextWriterAttribute.Value, Url.ResolveUrl(lic.FileName));
+                output.AddAttribute(HtmlTextWriterAttribute.Value, Url.ResolveUrl(lic.FileName),false);
                 output.RenderBeginTag(HtmlTextWriterTag.Param);
                 output.RenderEndTag();
 
@@ -230,7 +230,7 @@ namespace MeadCo.ScriptXClient
 
             // always output factory
             if (!isLicensed && !string.IsNullOrEmpty(codebase))
-                output.AddAttribute("codebase", codebase);
+                output.AddAttribute("codebase", codebase,false);
 
             output.AddAttribute("classid", "clsid:" + SXclsid);
             output.AddAttribute(HtmlTextWriterAttribute.Id, clientId);
