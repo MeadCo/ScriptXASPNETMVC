@@ -187,7 +187,7 @@ namespace MeadCo.ScriptXClient
                 return new HtmlString("");
             }
 
-            string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={bitsProvider.Version}"
+            string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={bitsProvider.CodebaseVersion}"
                 : bitsProvider.CodeBase;
 
             output.AddStyleAttribute("display", "none");
