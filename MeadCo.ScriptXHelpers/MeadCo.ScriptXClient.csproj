@@ -35,7 +35,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC04\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC05\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientPrinting.cs" />
-    <Compile Include="BitsFinder.cs" />
+    <Compile Include="ConfigProviders.cs" />
     <Compile Include="Library\Helpers.cs" />
     <Compile Include="Library\ScriptSnippets.cs" />
     <Compile Include="Library\URL.cs" />

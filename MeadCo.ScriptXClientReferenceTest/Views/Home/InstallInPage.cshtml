@@ -17,19 +17,33 @@
     @MeadCo.ScriptXClient.PrintButton.GetHtml(htmlAttributes: new { @class="btn btn-default"})&nbsp;@MeadCo.ScriptXClient.PrintPreviewButton.GetHtml(htmlAttributes: new { @class = "btn btn-default" })
 </div>
 
+<div>
+    <p>ScriptX Version is: <strong id="sxv"></strong></p>
+</div>
+
+
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
-            console.log("Document is ready");
+        // do not use $(function() {}) as the license may still be loading.
+        $(window).load(function () {
+            console.log("window is ready");
             try {
                 if (MeadCo.ScriptX.Init()) {
                     console.log("ScriptX version " + MeadCo.ScriptX.ScriptXVersion() + " is available");
+                    $("#sxv").text(MeadCo.ScriptX.ScriptXVersion());
+                    if (MeadCo.Licensing.IsLicensed() ) {
+                        alert("Licensed.");
+                    } else {
+                        console.log("License error: " + MeadCo.Licensing.ErrorMessage());
+                        MeadCo.Licensing.ReportError("License failure.");
+                    }
                 } else {
-                    console.log("ScriptX failed to initialise");
+                    alert("ScriptX failed to initialise");
                 }
             } catch (e) {
-                console.log("It looks like the nuget packages havent been installed");
+                alert(e.message);
+                console.log("It looks like the nuget packages havent been installed: " + e.message);
             }
         });
     </script>

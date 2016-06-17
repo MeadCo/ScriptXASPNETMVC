@@ -44,12 +44,12 @@ namespace MeadCo.ScriptXClient
         {
             public InstallUiModel(InstallScope scope)
             {
-                ManualInstallers = BitsFinder.CodebaseFinder.Find(Processor).ToDictionary(i => i.Scope, i => i.ManualInstallerDownloadUrl);
+                ManualInstallers = ConfigProviders.CodebaseFinder.Find(Processor).ToDictionary(i => i.Scope, i => i.ManualInstallerDownloadUrl);
 
                 // determine if there is a bits provider for the alternative scope
                 Scope = scope;
                 AlternativeScope = scope == InstallScope.Machine ? InstallScope.User : InstallScope.Machine;
-                if (BitsFinder.CodebaseFinder.FindSingle(AlternativeScope, Processor) == default(IBitsProvider) )
+                if (ConfigProviders.CodebaseFinder.FindSingle(AlternativeScope, Processor) == default(IBitsProvider) )
                     AlternativeScope = scope;
 
             }
@@ -133,7 +133,7 @@ namespace MeadCo.ScriptXClient
             // determine the install scope to use
             //
             // defined as the first available for the client processor ...
-            IBitsProvider provider = BitsFinder.CodebaseFinder.Find(Processor).FirstOrDefault();
+            IBitsProvider provider = ConfigProviders.CodebaseFinder.Find(Processor).FirstOrDefault();
             // no provider for this archicture, then nothing we can do 
             if (provider == default(IBitsProvider))
             {
@@ -168,7 +168,7 @@ namespace MeadCo.ScriptXClient
                 BundleTable.Bundles.Add(new ScriptBundle("~/bundles/scriptx").Include("~/Scripts/meadco-scriptx-{version}.js"));
             }
 
-            LicenseConfiguration lic = Configuration.License;
+            ILicenseProvider lic = ConfigProviders.LicenseProvider;
             bool isLicensed = lic.IsLicensed;
 
             StringWriter sOut = new StringWriter();
@@ -179,7 +179,7 @@ namespace MeadCo.ScriptXClient
 
             // find a bits provider for the client processor for the request install scope
             // if we cant find one then return empty string  - we have nothing that can be installed.
-            IBitsFinder codeBitsFinder = BitsFinder.CodebaseFinder;
+            IBitsFinder codeBitsFinder = ConfigProviders.CodebaseFinder;
 
             IBitsProvider bitsProvider = codeBitsFinder.FindSingle(scope, Processor);
             if (bitsProvider == default(IBitsProvider))
@@ -201,36 +201,49 @@ namespace MeadCo.ScriptXClient
                 if (!string.IsNullOrEmpty(codebase))
                     output.AddAttribute("codebase", codebase,false);
 
-                output.AddAttribute(HtmlTextWriterAttribute.Id, "SecMgr");
+                output.AddAttribute(HtmlTextWriterAttribute.Id, "secmgr");
 
                 output.RenderBeginTag(HtmlTextWriterTag.Object);
 
-                output.AddAttribute(HtmlTextWriterAttribute.Name, "GUID");
-                output.AddAttribute(HtmlTextWriterAttribute.Value, lic.Guid.ToString());
-                output.RenderBeginTag(HtmlTextWriterTag.Param);
-                output.RenderEndTag();
+                output.WriteBeginTag("param");
+                output.WriteAttribute("name","GUID");
+                output.WriteAttribute("value",lic.Guid.ToString("B"));
+                output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                output.WriteLine();
 
-                output.AddAttribute(HtmlTextWriterAttribute.Name, "Revision");
-                output.AddAttribute(HtmlTextWriterAttribute.Value, lic.Revision.ToString());
-                output.RenderBeginTag(HtmlTextWriterTag.Param);
-                output.RenderEndTag();
+                output.WriteBeginTag("param");
+                output.WriteAttribute("name","Revision");
+                output.WriteAttribute("value",lic.Revision.ToString());
+                output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                output.WriteLine();
 
-                output.AddAttribute(HtmlTextWriterAttribute.Name, "Path");
-                output.AddAttribute(HtmlTextWriterAttribute.Value, Url.ResolveUrl(lic.FileName),false);
-                output.RenderBeginTag(HtmlTextWriterTag.Param);
-                output.RenderEndTag();
+                output.WriteBeginTag("param");
+                output.WriteAttribute("name", "Path");
+                output.WriteAttribute("value", Url.ResolveUrl(lic.FileName),false);
+                output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                output.WriteLine();
 
-                output.AddAttribute(HtmlTextWriterAttribute.Name, "PerUser");
-                output.AddAttribute(HtmlTextWriterAttribute.Value, lic.PerUser.ToString());
-                output.RenderBeginTag(HtmlTextWriterTag.Param);
-                output.RenderEndTag();
+                output.WriteBeginTag("param");
+                output.WriteAttribute("name", "PerUser");
+                output.WriteAttribute("value", lic.PerUser.ToString());
+                output.Write(HtmlTextWriter.SelfClosingTagEnd);
 
                 output.RenderEndTag();
+                output.WriteLine();
             }
 
             // always output factory
-            if (!isLicensed && !string.IsNullOrEmpty(codebase))
-                output.AddAttribute("codebase", codebase,false);
+            if (!isLicensed)
+            {
+                if ( !string.IsNullOrEmpty(codebase) ) 
+                    output.AddAttribute("codebase", codebase, false);
+            }
+            else
+            {
+                // licensed, assume codebased somehow, ensure we request the required version of factory
+                // in case a lower version is installed
+                output.AddAttribute("codebase", $"#Version={bitsProvider.CodebaseVersion}");
+            }
 
             output.AddAttribute("classid", "clsid:" + SXclsid);
             output.AddAttribute(HtmlTextWriterAttribute.Id, clientId);
