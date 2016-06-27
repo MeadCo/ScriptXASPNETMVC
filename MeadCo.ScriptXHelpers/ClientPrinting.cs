@@ -242,7 +242,9 @@ namespace MeadCo.ScriptXClient
             {
                 // licensed, assume codebased somehow, ensure we request the required version of factory
                 // in case a lower version is installed
-                output.AddAttribute("codebase", $"#Version={bitsProvider.CodebaseVersion}");
+                codebase = bitsProvider.CodebaseVersion;
+                if (!string.IsNullOrEmpty(codebase))
+                    output.AddAttribute("codebase", $"#Version={bitsProvider.CodebaseVersion}");
             }
 
             output.AddAttribute("classid", "clsid:" + SXclsid);
