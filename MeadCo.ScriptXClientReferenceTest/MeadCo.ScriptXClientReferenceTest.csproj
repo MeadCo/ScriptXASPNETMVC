@@ -140,7 +140,7 @@
     <Content Include="Content\MeadCo.ScriptX\images\infobar8.png" />
     <Content Include="Content\MeadCo.ScriptX\images\needsdesktop.png" />
     <Content Include="Content\MeadCo.ScriptX\images\notificationbar.png" />
-    <Content Include="Content\MeadCo.ScriptX\installers\smsx.cab" />
+    <Content Include="Content\MeadCo.ScriptX\installers\smsx_8.0.0.cab" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -153,7 +153,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\MeadCo.ScriptX\installers\scriptx.msi" />
+    <Content Include="Content\MeadCo.ScriptX\installers\ScriptX_8.0.0.msi" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
