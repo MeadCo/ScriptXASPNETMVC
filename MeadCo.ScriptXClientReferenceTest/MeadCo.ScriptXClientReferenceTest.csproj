@@ -48,6 +48,10 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MeadCo.ScriptXConfigHandler, Version=7.7.0.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MeadCoScriptXInstallers.7.7.0\lib\net40\MeadCo.ScriptXConfigHandler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC07\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
@@ -140,6 +144,7 @@
     <Content Include="Content\MeadCo.ScriptX\images\infobar8.png" />
     <Content Include="Content\MeadCo.ScriptX\images\needsdesktop.png" />
     <Content Include="Content\MeadCo.ScriptX\images\notificationbar.png" />
+    <Content Include="Content\MeadCo.ScriptX\installers\smsx.cab" />
     <Content Include="Content\MeadCo.ScriptX\installers\smsx_8.0.0.cab" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -154,6 +159,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\MeadCo.ScriptX\installers\ScriptX_8.0.0.msi" />
+    <Content Include="Content\MeadCo.ScriptX\installers\scriptx.msi" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
