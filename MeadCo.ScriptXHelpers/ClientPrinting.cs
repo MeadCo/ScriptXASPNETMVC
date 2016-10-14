@@ -44,12 +44,12 @@ namespace MeadCo.ScriptXClient
         {
             public InstallUiModel(InstallScope scope)
             {
-                ManualInstallers = ConfigProviders.CodebaseFinder.Find(Processor).ToDictionary(i => i.Scope, i => i.ManualInstallerDownloadUrl);
+                ManualInstallers = ConfigProviders.CodebaseFinder.Find(UserAgent).ToDictionary(i => i.Scope, i => i.ManualInstallerDownloadUrl);
 
                 // determine if there is a bits provider for the alternative scope
                 Scope = scope;
                 AlternativeScope = scope == InstallScope.Machine ? InstallScope.User : InstallScope.Machine;
-                if (ConfigProviders.CodebaseFinder.FindSingle(AlternativeScope, Processor) == default(IBitsProvider) )
+                if (ConfigProviders.CodebaseFinder.FindSingle(AlternativeScope, UserAgent) == default(IBitsProvider) )
                     AlternativeScope = scope;
 
             }
@@ -130,11 +130,10 @@ namespace MeadCo.ScriptXClient
             PrintSettings printSettings = null,
             string clientId = "factory")
         {
-            // determine the install scope to use
-            //
-            // defined as the first available for the client processor ...
-            IBitsProvider provider = ConfigProviders.CodebaseFinder.Find(Processor).FirstOrDefault();
-            // no provider for this archicture, then nothing we can do 
+            // determine the (default) install scope to use
+            // defined as the first/best available in web.config for the client agent ...
+            IBitsProvider provider = ConfigProviders.CodebaseFinder.Find(UserAgent).FirstOrDefault();
+            // no provider for this agent, then nothing we can do 
             if (provider == default(IBitsProvider))
             {
                 return new HtmlString("");
@@ -181,7 +180,7 @@ namespace MeadCo.ScriptXClient
             // if we cant find one then return empty string  - we have nothing that can be installed.
             IBitsFinder codeBitsFinder = ConfigProviders.CodebaseFinder;
 
-            IBitsProvider bitsProvider = codeBitsFinder.FindSingle(scope, Processor);
+            IBitsProvider bitsProvider = codeBitsFinder.FindSingle(scope, UserAgent);
             if (bitsProvider == default(IBitsProvider))
             {
                 return new HtmlString("");
@@ -268,7 +267,20 @@ namespace MeadCo.ScriptXClient
 
             if (clientValidationAction == ValidationAction.Redirect)
             {
-                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, string.IsNullOrEmpty(installHelper) ? Configuration.ClientInstaller.InstallHelperUrl : installHelper,scope));
+                string helper = installHelper;
+
+                if (string.IsNullOrEmpty(helper))
+                {
+                    helper = Configuration.ClientInstaller.InstallHelperUrl;
+                    if (string.IsNullOrEmpty(helper))
+                    {
+                        // not overridden anywhere so use the default
+                        // installed with this package.
+                        helper = Url.ResolveUrl("~/ScriptXClientPrinting/Install");
+                    }
+                }
+
+                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId,helper,scope));
             }
 
             if (printSettings != null)
@@ -299,16 +311,11 @@ namespace MeadCo.ScriptXClient
             return Configuration.ClientInstaller.InstallHelperUrl + "?scope=" + scope;
         }
 
-        private static MeadCo.ScriptX.MachineProcessor Processor
+        private static string UserAgent
         {
             get
             {
-                HttpRequest request = System.Web.HttpContext.Current.Request;
-                string agent = request.ServerVariables["HTTP_USER_AGENT"];
-
-                bool isWin64 = agent.Contains("Win64");
-
-                return isWin64 ? MachineProcessor.x64 : MachineProcessor.x86;
+                return System.Web.HttpContext.Current.Request.ServerVariables["HTTP_USER_AGENT"];
             }
         }
     }

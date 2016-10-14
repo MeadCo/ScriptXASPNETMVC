@@ -49,7 +49,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC05\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC07\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -164,8 +164,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\meadco-scriptx-1.0.3.js" />
-    <Content Include="Scripts\meadco-scriptx-1.0.3.min.js" />
+    <Content Include="Scripts\meadco-scriptx-1.1.0.js" />
+    <Content Include="Scripts\meadco-scriptx-1.1.0.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
