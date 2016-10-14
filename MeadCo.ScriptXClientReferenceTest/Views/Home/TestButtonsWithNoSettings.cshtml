@@ -1,0 +1,14 @@
+﻿
+@using MeadCo.ScriptXClient
+
+@{
+    ViewBag.Title = "Test Buttons With No Settings";
+}
+
+@MeadCo.ScriptXClient.ClientPrinting.GetHtml(clientValidationAction: ClientPrinting.ValidationAction.None)
+
+<h1>Testing ScriptX Helpers for Razor views</h1>
+<h2>@ViewBag.Title</h2>
+<div>
+    @MeadCo.ScriptXClient.PrintButton.GetHtml(htmlAttributes: new { @class = "btn btn-default" })&nbsp;@MeadCo.ScriptXClient.PrintPreviewButton.GetHtml(htmlAttributes: new { @class = "btn btn-default" })
+</div>

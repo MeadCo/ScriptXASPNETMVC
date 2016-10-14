@@ -56,12 +56,12 @@ namespace MeadCo.ScriptXClient.Library
                 sb.AppendLine("MeadCo.ScriptX.Printing.SetMarginMeasure(" + (ps.PageSetup.Units == PrintSettings.MarginUnits.Inches ? 2 : 1) + ");");
             }
 
-            if (!string.IsNullOrWhiteSpace(ps.Header))
+            if ( ps.Header != null )
             {
                 sb.AppendLine("MeadCo.ScriptX.Printing.header = \"" + ps.Header + "\";");
             }
 
-            if (!string.IsNullOrWhiteSpace(ps.Footer))
+            if ( ps.Footer != null )
             {
                 sb.AppendLine("MeadCo.ScriptX.Printing.footer = \"" + ps.Footer + "\";");
             }

@@ -34,12 +34,12 @@ namespace MeadCo.ScriptXClient
 
             if (string.IsNullOrWhiteSpace(frame))
             {
-                html.Append(" onclick=\"MeadCo_ScriptX_Settings(); MeadCo.ScriptX.PrintPage(" +
+                html.Append(" onclick=\"try { MeadCo_ScriptX_Settings(); } catch(e) {} MeadCo.ScriptX.PrintPage(" +
                             prompt.ToString().ToLower() + "); return false;\"");
             }
             else
             {
-                html.Append(" onclick=\"MeadCo_ScriptX_Settings(); MeadCo.ScriptX.PrintFrame('" + frame + "'," +
+                html.Append(" onclick=\"try { MeadCo_ScriptX_Settings(); } catch(e) {} MeadCo.ScriptX.PrintFrame('" + frame + "'," +
                             prompt.ToString().ToLower() + "); return false;\"");
             }
 

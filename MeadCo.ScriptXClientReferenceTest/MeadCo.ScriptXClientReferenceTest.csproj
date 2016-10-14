@@ -194,6 +194,9 @@
     <Content Include="Views\ScriptXClientPrinting\InstallUI.cshtml" />
     <Content Include="Views\Home\InstallWithRedirect.cshtml" />
     <Content Include="Views\Home\InstallInPage.cshtml" />
+    <Content Include="Views\Home\TestNoFooter.cshtml" />
+    <Content Include="Views\Home\TestBlankFooter.cshtml" />
+    <Content Include="Views\Home\TestButtonsWithNoSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

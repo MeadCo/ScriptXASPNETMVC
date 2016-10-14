@@ -30,11 +30,11 @@ namespace MeadCo.ScriptXClient
 
             if (string.IsNullOrWhiteSpace(frame))
             {
-                html.Append(" onclick=\"MeadCo_ScriptX_Settings(); MeadCo.ScriptX.PreviewPage(); return false;\"");
+                html.Append(" onclick=\"try { MeadCo_ScriptX_Settings(); } catch(e) {} MeadCo.ScriptX.PreviewPage(); return false;\"");
             }
             else
             {
-                html.Append(" onclick=\"MeadCo_ScriptX_Settings(); MeadCo.ScriptX.PreviewFrame('" + frame + "'); return false;\"");
+                html.Append(" onclick=\"try { MeadCo_ScriptX_Settings(); } catch(e) {} MeadCo.ScriptX.PreviewFrame('" + frame + "'); return false;\"");
             }
 
             html.Append(string.Format(CultureInfo.InvariantCulture, ">{0}</button>", text));

@@ -22,5 +22,20 @@ namespace MeadCo.ScriptXClientReference.Controllers
         {
             return View();
         }
+
+        public ActionResult TestNoFooter()
+        {
+            return View();
+        }
+
+        public ActionResult TestBlankFooter()
+        {
+            return View();
+        }
+
+        public ActionResult TestButtonsWithNoSettings()
+        {
+            return View();
+        }
     }
 }

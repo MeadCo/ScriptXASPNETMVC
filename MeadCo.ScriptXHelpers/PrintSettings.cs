@@ -69,7 +69,7 @@ namespace MeadCo.ScriptXClient
             set;
         }
 
-        [Category("Behavior"), DefaultValue("")]
+        [Category("Behavior"), DefaultValue(null)]
         public string Header
         {
             get;
@@ -77,7 +77,7 @@ namespace MeadCo.ScriptXClient
         }
 
 
-        [Category("Behavior"), DefaultValue("")]
+        [Category("Behavior"), DefaultValue(null)]
         public string Footer
         {
             get;
