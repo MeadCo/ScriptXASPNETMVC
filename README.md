@@ -28,3 +28,4 @@ Copyright © 2016 [Mead & Co Ltd][6].
 [3]: http://scriptx.meadroid.com
 [4]: https://github.com/MeadCo/ScriptXConfig
 [5]: http://scriptx.meadroid.com/knowledge-bank/guide-for-client-side-printing/quick-start-with-visual-studio/aspnet-mvc-web-application.aspx
+[6]: http://scriptx.meadroid.com
