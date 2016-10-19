@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClient", "MeadCo.ScriptXHelpers\MeadCo.ScriptXClient.csproj", "{BCAAD3ED-F9F4-40A9-907D-0D1973632334}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClientReferenceTest", "MeadCo.ScriptXClientReferenceTest\MeadCo.ScriptXClientReferenceTest.csproj", "{0CBD62D2-B176-4B07-9DDA-357C62561134}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadCo.ScriptXClientPackageTest", "MeadCo.ScriptXClientPackageTest\MeadCo.ScriptXClientPackageTest.csproj", "{24D86C39-75CF-4A29-B4A1-EB04C5D7BC6C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F44E7188-2F96-4BB3-9C16-E5ADD57492C8}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

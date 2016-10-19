@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mead and Co Ltd")]
 [assembly: AssemblyProduct("MeadCo ScriptX Toolkit")]
-[assembly: AssemblyCopyright("Copyright 2015, Mead and Co Ltd")]
+[assembly: AssemblyCopyright("Copyright 2016, Mead and Co Ltd")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
-[assembly: AssemblyInformationalVersion("2.0.0-Beta15")]
+[assembly: AssemblyInformationalVersion("2.0.0")]
