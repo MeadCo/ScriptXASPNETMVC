@@ -35,15 +35,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC07\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Content\MeadCo.ScriptX\installers\scriptx.msi" />
+    <None Include="Content\MeadCo.ScriptX\installers\ScriptX_8.0.0.msi" />
     <None Include="PackageContent\Controllers\ScriptXClientPrintingController.cs.pp" />
     <None Include="PackageContent\Views\ScriptXClientPrinting\Install.cshtml" />
     <None Include="PackageContent\Views\ScriptXClientPrinting\InstallUI.cshtml" />
@@ -96,7 +96,7 @@
     <None Include="PackageContent\Content\MeadCo.ScriptX\images\notificationbar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\MeadCo.ScriptX\installers\smsx.cab" />
+    <Content Include="Content\MeadCo.ScriptX\installers\smsx_8.0.0.cab" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
