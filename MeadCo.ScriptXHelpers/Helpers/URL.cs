@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 
-namespace MeadCo.ScriptXClient.Library
+namespace MeadCo.ScriptXClient.Helpers
 {
     internal class Url
     {

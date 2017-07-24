@@ -2,7 +2,7 @@
 using System.Text;
 using MeadCo.ScriptX;
 
-namespace MeadCo.ScriptXClient.Library
+namespace MeadCo.ScriptXClient.Helpers
 {
     internal static class ScriptSnippets
     {

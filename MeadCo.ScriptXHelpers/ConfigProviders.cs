@@ -19,7 +19,7 @@ namespace MeadCo.ScriptXClient
     public static class ConfigProviders
     {
         private static IBitsFinder _bitsFinder = null;
-        private static ILicenseProvider _licenseProvider;
+        private static ILicenseProvider _licenseProvider = null;
 
         public static IBitsFinder CodebaseFinder
         {

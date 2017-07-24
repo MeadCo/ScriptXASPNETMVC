@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using MeadCo.ScriptXClient.Library;
+using MeadCo.ScriptXClient.Helpers;
 
 namespace MeadCo.ScriptXClient
 {

@@ -34,8 +34,8 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+    <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.3.0.0-beta01\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -68,9 +68,9 @@
   <ItemGroup>
     <Compile Include="ClientPrinting.cs" />
     <Compile Include="ConfigProviders.cs" />
-    <Compile Include="Library\Helpers.cs" />
-    <Compile Include="Library\ScriptSnippets.cs" />
-    <Compile Include="Library\URL.cs" />
+    <Compile Include="Helpers\ObjectToDictionaryHelper.cs" />
+    <Compile Include="Helpers\ScriptSnippets.cs" />
+    <Compile Include="Helpers\URL.cs" />
     <Compile Include="PrintButton.cs" />
     <Compile Include="PrintPreviewButton.cs" />
     <Compile Include="PrintSettings.cs" />
@@ -86,7 +86,9 @@
     <None Include="PackageContent\web.config.install.xdt" />
     <None Include="PackageContent\Web.config.transform" />
     <None Include="PackageContent\web.config.uninstall.xdt" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="PackageContent\Content\MeadCo.ScriptX\images\activexfiltering.png" />

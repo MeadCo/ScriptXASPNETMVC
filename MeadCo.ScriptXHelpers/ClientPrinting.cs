@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Optimization;
 using System.Web.UI;
 using MeadCo.ScriptX;
-using MeadCo.ScriptXClient.Library;
+using MeadCo.ScriptXClient.Helpers;
 using Microsoft.Ajax.Utilities;
 
 namespace MeadCo.ScriptXClient
