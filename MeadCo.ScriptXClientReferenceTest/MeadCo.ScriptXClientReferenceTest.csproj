@@ -176,6 +176,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\meadco-scriptx-1.2.0.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.min.js">
+      <DependentUpon>jQuery-MeadCo.ScriptX.Print.UI.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-core.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.js" />

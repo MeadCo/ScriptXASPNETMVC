@@ -68,6 +68,8 @@
   <ItemGroup>
     <Compile Include="ClientPrinting.cs" />
     <Compile Include="ConfigProviders.cs" />
+    <Compile Include="Extensions\PrintSettingsExtensions.cs" />
+    <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Helpers\ObjectToDictionaryHelper.cs" />
     <Compile Include="Helpers\ScriptSnippets.cs" />
     <Compile Include="Helpers\URL.cs" />

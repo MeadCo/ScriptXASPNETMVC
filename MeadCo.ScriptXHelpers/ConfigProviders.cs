@@ -20,6 +20,7 @@ namespace MeadCo.ScriptXClient
     {
         private static IBitsFinder _bitsFinder = null;
         private static ILicenseProvider _licenseProvider = null;
+        private static IPrintService _printService = null;
 
         public static IBitsFinder CodebaseFinder
         {
@@ -31,6 +32,12 @@ namespace MeadCo.ScriptXClient
         {
             get { return _licenseProvider ?? (_licenseProvider = Configuration.License); }
             set { _licenseProvider = value; }
+        }
+
+        public static IPrintService PrintServiceProvider
+        {
+            get { return _printService ?? (_printService = Configuration.PrintService);  }
+            set { _printService = value; }
         }
     }
 }

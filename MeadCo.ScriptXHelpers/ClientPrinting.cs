@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Optimization;
 using System.Web.UI;
 using MeadCo.ScriptX;
+using MeadCo.ScriptXClient.Extensions;
 using MeadCo.ScriptXClient.Helpers;
 using Microsoft.Ajax.Utilities;
 
@@ -118,8 +119,8 @@ namespace MeadCo.ScriptXClient
         /// <summary>
         /// Returns object tag(s) declaring license manager and scriptx factory on the page.
         /// </summary>
-        /// <param name="installHelper">hyperlink to the install helper page</param>
-        /// <param name="clientValidationAction">Action to take if ScriptX is not installed</param>
+        /// <param name="installHelper">hyperlink to the install helper page (for IE)</param>
+        /// <param name="clientValidationAction">Action to take if ScriptX is not installed (for IE)</param>
         /// <param name="htmlPrintProcessor">Print template to use</param>
         /// <param name="printSettings">Settings to be applied before any print.</param>
         /// <param name="clientId">id to assign to the scriptx factory object</param>
@@ -132,14 +133,26 @@ namespace MeadCo.ScriptXClient
         {
             // determine the (default) install scope to use
             // defined as the first/best available in web.config for the client agent ...
-            IBitsProvider provider = ConfigProviders.CodebaseFinder.Find(UserAgent).FirstOrDefault();
-            // no provider for this agent, then nothing we can do 
+            string userAgent = UserAgent;
+            IBitsProvider provider = ConfigProviders.CodebaseFinder.Find(userAgent).FirstOrDefault();
+            InstallScope scope = InstallScope.User;
+
+            // no add-on provider for this agent then is ScriptX.Print available
             if (provider == default(IBitsProvider))
             {
-                return new HtmlString("");
+                // Note: We may have no add-on available, scriptx.print available but agent is IE 10 or less (yes, this is unlikely)
+                // so have to check scriptx.print is usable for the agent as well as generally available.
+                if ( !ConfigProviders.PrintServiceProvider.IsAvailable || !ConfigProviders.PrintServiceProvider.UseForAgent(userAgent) )
+                    return new HtmlString("");
+
+                // by definition the 'scope' for scriptx.print is user
+            }
+            else
+            {
+                scope = provider.Scope;
             }
 
-            return GetHtmlForScope(provider.Scope,installHelper, clientValidationAction, htmlPrintProcessor, printSettings, clientId);    
+            return GetHtmlForScope(scope,installHelper, clientValidationAction, htmlPrintProcessor, printSettings, clientId);    
         }
 
         /// <summary>
@@ -158,129 +171,163 @@ namespace MeadCo.ScriptXClient
             PrintSettings printSettings = null,
             string clientId = "factory")
         {
+            const string wrapperScriptsBundleName = "~/bundles/wrapscriptx";
+            const string dotPrintScriptsBundleName = "~/bundles/scriptxdotprint";
+
             // Dependency: Microsoft.aspnet.web.optimization
             // IHtmlString x = System.Web.Optimization.Scripts.Render("/");
             // BundleTable.Bundles.GetBundleFor()
-            Bundle b = BundleTable.Bundles.GetBundleFor("~/bundles/scriptx");
+            Bundle b = BundleTable.Bundles.GetBundleFor(wrapperScriptsBundleName);
             if (b == null)
             {
-                BundleTable.Bundles.Add(new ScriptBundle("~/bundles/scriptx").Include("~/Scripts/meadco-scriptx-{version}.js"));
+                BundleTable.Bundles.Add(new ScriptBundle(wrapperScriptsBundleName).Include("~/Scripts/meadco-scriptx-{version}.js"));
             }
 
-            ILicenseProvider lic = ConfigProviders.LicenseProvider;
-            bool isLicensed = lic.IsLicensed;
+            // and a bundle for ScriptX.Print which includes the factory anti-polyfill which will be used by the wrapper
+            b = BundleTable.Bundles.GetBundleFor(dotPrintScriptsBundleName);
+            if (b == null)
+            {
+                BundleTable.Bundles.Add(new ScriptBundle(dotPrintScriptsBundleName).Include("~/Scripts/MeadCo.ScriptX/meadco-core.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprint.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxlicense.js")); 
+            }
 
             StringWriter sOut = new StringWriter();
             HtmlTextWriter output = new HtmlTextWriter(sOut);
 
-            // if validate is redirect then for this page just output the #Version so we get version checked but dont attempt
-            // to install if it is the wrong version or not yet installed - the page redirected to will do that.
+            StringBuilder markup = new StringBuilder(System.Web.Optimization.Scripts.Render(wrapperScriptsBundleName).ToString());
 
-            // find a bits provider for the client processor for the request install scope
-            // if we cant find one then return empty string  - we have nothing that can be installed.
-            IBitsFinder codeBitsFinder = ConfigProviders.CodebaseFinder;
+            bool bUseAddOn = !ConfigProviders.PrintServiceProvider.UseForAgent(UserAgent);
 
-            IBitsProvider bitsProvider = codeBitsFinder.FindSingle(scope, UserAgent);
-            if (bitsProvider == default(IBitsProvider))
+            if (bUseAddOn)
             {
-                return new HtmlString("");
-            }
+                ILicenseProvider lic = ConfigProviders.LicenseProvider;
+                bool isLicensed = lic.IsLicensed;
 
-            string codebase = clientValidationAction == ValidationAction.Redirect ? $"#Version={bitsProvider.CodebaseVersion}"
-                : bitsProvider.CodeBase;
+                // if validate is redirect then for this page just output the #Version so we get version checked but dont attempt
+                // to install if it is the wrong version or not yet installed - the page redirected to will do that.
 
-            output.AddStyleAttribute("display", "none");
-            output.RenderBeginTag(HtmlTextWriterTag.Div);
+                // find a bits provider for the client processor for the request install scope
+                // if we cant find one then return empty string  - we have nothing that can be installed.
+                IBitsFinder codeBitsFinder = ConfigProviders.CodebaseFinder;
 
-            // if licensed then we need to output security manager with the codebase and license..
-            if (isLicensed)
-            {
-                output.AddAttribute("classid", "clsid:" + SMclsid);
+                IBitsProvider bitsProvider = codeBitsFinder.FindSingle(scope, UserAgent);
+                if (bitsProvider == default(IBitsProvider))
+                {
+                    return new HtmlString("");
+                }
 
-                if (!string.IsNullOrEmpty(codebase))
-                    output.AddAttribute("codebase", codebase,false);
+                string codebase = clientValidationAction == ValidationAction.Redirect
+                    ? $"#Version={bitsProvider.CodebaseVersion}"
+                    : bitsProvider.CodeBase;
 
-                output.AddAttribute(HtmlTextWriterAttribute.Id, "secmgr");
+                output.AddStyleAttribute("display", "none");
+                output.RenderBeginTag(HtmlTextWriterTag.Div);
+
+                // if licensed then we need to output security manager with the codebase and license..
+                if (isLicensed)
+                {
+                    output.AddAttribute("classid", "clsid:" + SMclsid);
+
+                    if (!string.IsNullOrEmpty(codebase))
+                        output.AddAttribute("codebase", codebase, false);
+
+                    output.AddAttribute(HtmlTextWriterAttribute.Id, "secmgr");
+
+                    output.RenderBeginTag(HtmlTextWriterTag.Object);
+
+                    output.WriteBeginTag("param");
+                    output.WriteAttribute("name", "GUID");
+                    output.WriteAttribute("value", lic.Guid.ToString("B"));
+                    output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                    output.WriteLine();
+
+                    output.WriteBeginTag("param");
+                    output.WriteAttribute("name", "Revision");
+                    output.WriteAttribute("value", lic.Revision.ToString());
+                    output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                    output.WriteLine();
+
+                    output.WriteBeginTag("param");
+                    output.WriteAttribute("name", "Path");
+                    output.WriteAttribute("value", Url.ResolveUrl(lic.FileName), false);
+                    output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                    output.WriteLine();
+
+                    output.WriteBeginTag("param");
+                    output.WriteAttribute("name", "PerUser");
+                    output.WriteAttribute("value", lic.PerUser.ToString());
+                    output.Write(HtmlTextWriter.SelfClosingTagEnd);
+
+                    output.RenderEndTag();
+                    output.WriteLine();
+                }
+
+                // always output factory
+                if (!isLicensed)
+                {
+                    if (!string.IsNullOrEmpty(codebase))
+                        output.AddAttribute("codebase", codebase, false);
+                }
+                else
+                {
+                    // licensed, assume codebased somehow, ensure we request the required version of factory
+                    // in case a lower version is installed
+                    codebase = bitsProvider.CodebaseVersion;
+                    if (!string.IsNullOrEmpty(codebase))
+                        output.AddAttribute("codebase", $"#Version={bitsProvider.CodebaseVersion}");
+                }
+
+                output.AddAttribute("classid", "clsid:" + SXclsid);
+                output.AddAttribute(HtmlTextWriterAttribute.Id, clientId);
 
                 output.RenderBeginTag(HtmlTextWriterTag.Object);
 
-                output.WriteBeginTag("param");
-                output.WriteAttribute("name","GUID");
-                output.WriteAttribute("value",lic.Guid.ToString("B"));
-                output.Write(HtmlTextWriter.SelfClosingTagEnd);
-                output.WriteLine();
-
-                output.WriteBeginTag("param");
-                output.WriteAttribute("name","Revision");
-                output.WriteAttribute("value",lic.Revision.ToString());
-                output.Write(HtmlTextWriter.SelfClosingTagEnd);
-                output.WriteLine();
-
-                output.WriteBeginTag("param");
-                output.WriteAttribute("name", "Path");
-                output.WriteAttribute("value", Url.ResolveUrl(lic.FileName),false);
-                output.Write(HtmlTextWriter.SelfClosingTagEnd);
-                output.WriteLine();
-
-                output.WriteBeginTag("param");
-                output.WriteAttribute("name", "PerUser");
-                output.WriteAttribute("value", lic.PerUser.ToString());
-                output.Write(HtmlTextWriter.SelfClosingTagEnd);
+                if (htmlPrintProcessor != ScriptXHtmlPrintProcessors.Default)
+                {
+                    output.AddAttribute(HtmlTextWriterAttribute.Name, "Template");
+                    output.AddAttribute(HtmlTextWriterAttribute.Value, "MeadCo://" + htmlPrintProcessor.ToString());
+                    output.RenderBeginTag(HtmlTextWriterTag.Param);
+                    output.RenderEndTag();
+                }
 
                 output.RenderEndTag();
-                output.WriteLine();
-            }
 
-            // always output factory
-            if (!isLicensed)
-            {
-                if ( !string.IsNullOrEmpty(codebase) ) 
-                    output.AddAttribute("codebase", codebase, false);
+                output.RenderEndTag(); // div
+
+                if (clientValidationAction == ValidationAction.Redirect)
+                {
+                    string helper = installHelper;
+
+                    if (string.IsNullOrEmpty(helper))
+                    {
+                        helper = Configuration.ClientInstaller.InstallHelperUrl;
+                        if (string.IsNullOrEmpty(helper))
+                        {
+                            // not overridden anywhere so use the default
+                            // installed with this package.
+                            helper = Url.ResolveUrl("~/ScriptXClientPrinting/Install");
+                        }
+                    }
+
+                    markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId, helper, scope));
+                }
             }
             else
             {
-                // licensed, assume codebased somehow, ensure we request the required version of factory
-                // in case a lower version is installed
-                codebase = bitsProvider.CodebaseVersion;
-                if (!string.IsNullOrEmpty(codebase))
-                    output.AddAttribute("codebase", $"#Version={bitsProvider.CodebaseVersion}");
-            }
-
-            output.AddAttribute("classid", "clsid:" + SXclsid);
-            output.AddAttribute(HtmlTextWriterAttribute.Id, clientId);
-
-            output.RenderBeginTag(HtmlTextWriterTag.Object);
-
-            if (htmlPrintProcessor != ScriptXHtmlPrintProcessors.Default)
-            {
-                output.AddAttribute(HtmlTextWriterAttribute.Name, "Template");
-                output.AddAttribute(HtmlTextWriterAttribute.Value, "MeadCo://" + htmlPrintProcessor.ToString());
-                output.RenderBeginTag(HtmlTextWriterTag.Param);
-                output.RenderEndTag();
-            }
-
-            output.RenderEndTag();
-
-            output.RenderEndTag(); // div
-
-            StringBuilder markup = new StringBuilder(System.Web.Optimization.Scripts.Render("~/bundles/scriptx").ToString());
-
-            if (clientValidationAction == ValidationAction.Redirect)
-            {
-                string helper = installHelper;
-
-                if (string.IsNullOrEmpty(helper))
+                if (!ConfigProviders.PrintServiceProvider.IsAvailable)
                 {
-                    helper = Configuration.ClientInstaller.InstallHelperUrl;
-                    if (string.IsNullOrEmpty(helper))
-                    {
-                        // not overridden anywhere so use the default
-                        // installed with this package.
-                        helper = Url.ResolveUrl("~/ScriptXClientPrinting/Install");
-                    }
+                    return new HtmlString("");
                 }
 
-                markup.AppendScript(ScriptSnippets.BuildInstallOkCode(clientId,helper,scope));
+                // not IE add-on, using ScriptX.Print ...
+                markup.AppendLine(System.Web.Optimization.Scripts.Render(dotPrintScriptsBundleName).ToString());
+                markup.AppendScript(
+                    ScriptSnippets.BuildDotPrintInitialisation(
+                        ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
+                        ConfigProviders.PrintServiceProvider.SubscriptionGuid.ToString()));
             }
 
             if (printSettings != null)
