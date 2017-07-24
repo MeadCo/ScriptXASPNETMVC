@@ -1,0 +1,20 @@
+{
+  "name": "ScriptXClientRefTest",
+  "preferGlobal": true,
+  "version": "1.0.0",
+  "author": "Pete Cole",
+  "bin": {
+    "package-name": "./bin/package-name"
+  },
+  "dependencies": {},
+  "analyze": false,
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-bower": "0.0.10",
+    "gulp-concat": "^2.6.1"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "mvchelperstestbyref",
+  "homepage": "https://github.com/MeadCo/ScriptXASPNETMVC",
+  "authors": [
+    "Pete Cole <pcole@meadroid.com>"
+  ],
+  "description": "Testing of MVC/Razor helpers",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "scriptxprint-html": "1.0.1"
+  }
+}

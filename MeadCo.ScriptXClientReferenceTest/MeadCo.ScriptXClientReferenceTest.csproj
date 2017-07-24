@@ -160,7 +160,11 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\MeadCo.ScriptX\installers\scriptx.msi" />
     <Content Include="Content\MeadCo.ScriptX\installers\ScriptX_8.0.0.msi" />
+    <Content Include="bower.json" />
+    <Content Include="package.json" />
+    <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
+    <Content Include="gulpfile.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
@@ -171,6 +175,12 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\meadco-scriptx-1.2.0.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-core.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />

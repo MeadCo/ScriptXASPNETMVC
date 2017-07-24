@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/jQuery-MeadCo.ScriptX.Print.UI.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/jQuery-MeadCo.ScriptX.Print.UI.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-core.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-core.js"
+    ]
+  }
+]
