@@ -9,7 +9,6 @@ using System.Web.UI;
 using MeadCo.ScriptX;
 using MeadCo.ScriptXClient.Extensions;
 using MeadCo.ScriptXClient.Helpers;
-using Microsoft.Ajax.Utilities;
 
 namespace MeadCo.ScriptXClient
 {
