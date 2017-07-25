@@ -34,16 +34,16 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.2.0.0-RC07\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+    <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.3.0.0-beta01\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -68,9 +68,11 @@
   <ItemGroup>
     <Compile Include="ClientPrinting.cs" />
     <Compile Include="ConfigProviders.cs" />
-    <Compile Include="Library\Helpers.cs" />
-    <Compile Include="Library\ScriptSnippets.cs" />
-    <Compile Include="Library\URL.cs" />
+    <Compile Include="Extensions\PrintSettingsExtensions.cs" />
+    <Compile Include="Extensions\StringBuilderExtensions.cs" />
+    <Compile Include="Helpers\ObjectToDictionaryHelper.cs" />
+    <Compile Include="Helpers\ScriptSnippets.cs" />
+    <Compile Include="Helpers\URL.cs" />
     <Compile Include="PrintButton.cs" />
     <Compile Include="PrintPreviewButton.cs" />
     <Compile Include="PrintSettings.cs" />
@@ -78,7 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Content\MeadCo.ScriptX\installers\scriptx.msi" />
+    <None Include="Content\MeadCo.ScriptX\installers\ScriptX_8.0.0.msi" />
     <None Include="PackageContent\Controllers\ScriptXClientPrintingController.cs.pp" />
     <None Include="PackageContent\Views\ScriptXClientPrinting\Install.cshtml" />
     <None Include="PackageContent\Views\ScriptXClientPrinting\InstallUI.cshtml" />
@@ -86,7 +88,9 @@
     <None Include="PackageContent\web.config.install.xdt" />
     <None Include="PackageContent\Web.config.transform" />
     <None Include="PackageContent\web.config.uninstall.xdt" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="PackageContent\Content\MeadCo.ScriptX\images\activexfiltering.png" />
@@ -96,7 +100,7 @@
     <None Include="PackageContent\Content\MeadCo.ScriptX\images\notificationbar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\MeadCo.ScriptX\installers\smsx.cab" />
+    <Content Include="Content\MeadCo.ScriptX\installers\smsx_8.0.0.cab" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

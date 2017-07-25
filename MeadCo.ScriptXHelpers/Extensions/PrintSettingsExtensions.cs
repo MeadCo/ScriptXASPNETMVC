@@ -1,45 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using MeadCo.ScriptX;
+using System.Threading.Tasks;
 
-namespace MeadCo.ScriptXClient.Library
+namespace MeadCo.ScriptXClient.Extensions
 {
-    internal static class ScriptSnippets
+    internal static class PrintSettingsExtensions
     {
-        public static StringBuilder AppendScript(this StringBuilder sb, StringBuilder script)
-        {
-            sb.AppendLine("<script type=\"text/javascript\">");
-            sb.Append(script);
-            sb.AppendLine("</script>");
-            return sb;
-        }
-
-        /// <summary>
-        /// builds a function to check if scriptx is installed and if not redirect 
-        /// the browser client to the given url
-        /// </summary>
-        /// <param name="sFactoryObjectId"></param>
-        /// <param name="sRedirectUri"></param>
-        /// <returns></returns>
-        public static StringBuilder BuildInstallOkCode(String sFactoryObjectId, string sRedirectUri,InstallScope scope)
-        {
-            if (string.IsNullOrEmpty((sRedirectUri)))
-            {
-                throw new ArgumentException("A redirect url is required");    
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine("function MeadCo_ScriptX_CheckInstalled() {");
-            sb.AppendLine("var f = document.getElementById(\"" + sFactoryObjectId + "\");");
-            sb.AppendLine("if ( f==null || typeof(f)==\"undefined\" || f.object == null ) {");
-            sb.AppendLine("window.location = \"" + sRedirectUri + "?scope=" + scope + "\";");
-            sb.AppendLine("}");
-            sb.AppendLine("}");
-            sb.AppendLine("if ( window.addEventListener ) { window.addEventListener('load',MeadCo_ScriptX_CheckInstalled,false); } else { window.attachEvent(\"onload\",MeadCo_ScriptX_CheckInstalled); }");
-            return sb;
-        }
-
         public static StringBuilder BuildPrintSettingsCode(this PrintSettings ps)
         {
             StringBuilder sb = new StringBuilder("function MeadCo_ScriptX_Settings() { if ( MeadCo.ScriptX.Init() ) { ");
@@ -56,12 +24,12 @@ namespace MeadCo.ScriptXClient.Library
                 sb.AppendLine("MeadCo.ScriptX.Printing.SetMarginMeasure(" + (ps.PageSetup.Units == PrintSettings.MarginUnits.Inches ? 2 : 1) + ");");
             }
 
-            if ( ps.Header != null )
+            if (ps.Header != null)
             {
                 sb.AppendLine("MeadCo.ScriptX.Printing.header = \"" + ps.Header + "\";");
             }
 
-            if ( ps.Footer != null )
+            if (ps.Footer != null)
             {
                 sb.AppendLine("MeadCo.ScriptX.Printing.footer = \"" + ps.Footer + "\";");
             }

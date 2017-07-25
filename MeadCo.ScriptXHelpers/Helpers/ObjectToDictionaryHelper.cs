@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Routing;
 
-namespace MeadCo.ScriptXClient.Library
+namespace MeadCo.ScriptXClient.Helpers
 {
 
     // credit : https://gist.github.com/jarrettmeyer/798667

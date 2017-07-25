@@ -2,11 +2,13 @@
 A library of helpers for ASP.NET MVC Razor views to simplify the use of The MeadCo ScriptX Add-on for Internet Explorer to deliver controlled printing on client PCs.
 
 ## Current Version
-2.0.0
+2.1.0
 
-v2.0 is source compatible with views written against v1. 
+v2.1 Adsds support for working with a ScriptX.Print service - it will output code for working with the service instead of working with the add-on.
 
-However, note that v2.0 is under a different naming scheme on Nuget because of incompatibilities in the dependencies. To upgrade, uninstall the v1 package and install this. 
+v2.1 is source compatible with views written against v1. 
+
+However, note that v2.1 is under a different naming scheme on Nuget because of incompatibilities in the dependencies. To upgrade, uninstall the v1 package and install this. 
 
 v2 uses the new [Configuration handler][4] which is far more flexible than the v1 package and de-couples the help library from the binary bits for ScriptX itself.
 
@@ -18,7 +20,7 @@ An [overview][5] based on the v1 version of the helpers but that still applies t
 Note that the ability for the [configuration handler][4] to be configured with multiple versions of the ScriptX enables this version of the helpers to offer the best version of ScriptX to the user depending upon the version of Internet Explorer they are using.
 
 ## Copyright
-Copyright © 2016 [Mead & Co Ltd][6].
+Copyright © 2016, 2017 [Mead & Co Ltd][6].
 
 ## License 
 **MeadCo ScriptX Helpers for ASP.NET MVC** is under MIT license - http://www.opensource.org/licenses/mit-license.php
