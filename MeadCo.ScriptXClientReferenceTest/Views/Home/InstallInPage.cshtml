@@ -26,14 +26,14 @@
 {
     <script type="text/javascript">
         // do not use $(function() {}) as the license may still be loading.
-        $(window).load(function () {
+        $(window).on("load", function () {
             console.log("window is ready");
             try {
                 if (MeadCo.ScriptX.Init()) {
                     console.log("ScriptX version " + MeadCo.ScriptX.ScriptXVersion() + " is available");
                     $("#sxv").text(MeadCo.ScriptX.ScriptXVersion());
                     if (MeadCo.Licensing.IsLicensed() ) {
-                        alert("Licensed.");
+                        alert("ScriptX is Licensed.");
                     } else {
                         console.log("License error: " + MeadCo.Licensing.ErrorMessage());
                         MeadCo.Licensing.ReportError("License failure.");
