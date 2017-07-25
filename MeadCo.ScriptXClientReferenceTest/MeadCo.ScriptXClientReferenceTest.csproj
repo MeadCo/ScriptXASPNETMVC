@@ -182,6 +182,9 @@
       <DependentUpon>jQuery-MeadCo.ScriptX.Print.UI.js</DependentUpon>
     </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-core.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-core.min.js">
+      <DependentUpon>meadco-core.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
