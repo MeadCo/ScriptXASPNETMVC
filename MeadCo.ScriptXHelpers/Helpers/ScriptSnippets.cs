@@ -47,5 +47,20 @@ namespace MeadCo.ScriptXClient.Helpers
             return sb;
         }
 
+        public static StringBuilder BuildDotPrintLicenseDetail(string licenseServerEndPoint, string subscriptionId)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("function MeadCo_ScriptX_License_Connect() {");
+            sb.Append("secmgr.connect('");
+            sb.Append(licenseServerEndPoint);
+            sb.Append("','");
+            sb.Append(subscriptionId);
+            sb.AppendLine("');");
+            sb.AppendLine("}");
+            sb.AppendLine("window.addEventListener('load',MeadCo_ScriptX_License_Connect,false);");
+            return sb;
+        }
+
     }
 }

@@ -327,6 +327,11 @@ namespace MeadCo.ScriptXClient
                     ScriptSnippets.BuildDotPrintInitialisation(
                         ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
                         ConfigProviders.PrintServiceProvider.SubscriptionGuid.ToString()));
+
+                markup.AppendScript(
+                    ScriptSnippets.BuildDotPrintLicenseDetail(
+                        ConfigProviders.PrintServiceProvider.SubscriptionService.ToString(),
+                        ConfigProviders.PrintServiceProvider.SubscriptionGuid.ToString()));
             }
 
             if (printSettings != null)

@@ -37,5 +37,10 @@ namespace MeadCo.ScriptXClientReference.Controllers
         {
             return View();
         }
+
+        public ActionResult Simple()
+        {
+            return View();
+        }
     }
 }
