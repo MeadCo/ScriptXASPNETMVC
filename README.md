@@ -4,7 +4,7 @@ A library of helpers for ASP.NET MVC Razor views to simplify the use of The Mead
 ## Current Version
 2.1.0
 
-v2.1 Adsds support for working with a ScriptX.Print service - it will output code for working with the service instead of working with the add-on.
+v2.1 Adds support for working with a ScriptX Services - it will output code for working with the service instead of working with the add-on.
 
 v2.1 is source compatible with views written against v1. 
 

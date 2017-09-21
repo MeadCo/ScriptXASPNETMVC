@@ -186,9 +186,23 @@
       <DependentUpon>meadco-core.js</DependentUpon>
     </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.min.js">
+      <DependentUpon>meadco-scriptxfactory.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.min.js">
+      <DependentUpon>meadco-scriptxlicense.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.min.js">
+      <DependentUpon>meadco-scriptxprint.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.min.js">
+      <DependentUpon>meadco-scriptxprinthtml.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\MeadCo.ScriptX\promise.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\promise.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />

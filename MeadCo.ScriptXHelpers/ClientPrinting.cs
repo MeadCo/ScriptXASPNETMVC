@@ -172,6 +172,7 @@ namespace MeadCo.ScriptXClient
         {
             const string wrapperScriptsBundleName = "~/bundles/wrapscriptx";
             const string dotPrintScriptsBundleName = "~/bundles/scriptxdotprint";
+            const string promiseBundle = "~/bundles/scriptxpromise";
 
             // Dependency: Microsoft.aspnet.web.optimization
             // IHtmlString x = System.Web.Optimization.Scripts.Render("/");
@@ -191,6 +192,13 @@ namespace MeadCo.ScriptXClient
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxlicense.js")); 
+            }
+
+            // and a bundle for a promise polyfill which will be required by IE 11
+            b = BundleTable.Bundles.GetBundleFor(promiseBundle);
+            if (b == null)
+            {
+                BundleTable.Bundles.Add(new ScriptBundle(promiseBundle).Include("~/Scripts/MeadCo.ScriptX/promise.js"));
             }
 
             StringWriter sOut = new StringWriter();
@@ -323,6 +331,11 @@ namespace MeadCo.ScriptXClient
 
                 // not IE add-on, using ScriptX.Print ...
                 markup.AppendLine(System.Web.Optimization.Scripts.Render(dotPrintScriptsBundleName).ToString());
+                if (MeadCo.ScriptX.Helpers.AgentParser.IsInternetExplorer11(UserAgent))
+                {
+                    markup.AppendLine(System.Web.Optimization.Scripts.Render(promiseBundle).ToString());
+                }
+
                 markup.AppendScript(
                     ScriptSnippets.BuildDotPrintInitialisation(
                         ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),

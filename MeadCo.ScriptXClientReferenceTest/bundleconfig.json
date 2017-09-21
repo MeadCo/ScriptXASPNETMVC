@@ -10,5 +10,29 @@
     "inputFiles": [
       "Scripts/MeadCo.ScriptX/meadco-core.js"
     ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-scriptxfactory.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-scriptxlicense.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-scriptxlicense.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-scriptxprint.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-scriptxprint.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js"
+    ]
   }
 ]
