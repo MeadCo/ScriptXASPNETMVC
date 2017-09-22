@@ -226,6 +226,9 @@ namespace MeadCo.ScriptXClient
                     return new HtmlString("");
                 }
 
+                // by definition IE and to use some wrapper functions requires promise implementation.
+                markup.AppendLine(System.Web.Optimization.Scripts.Render(promiseBundle).ToString());
+
                 string codebase = clientValidationAction == ValidationAction.Redirect
                     ? $"#Version={bitsProvider.CodebaseVersion}"
                     : bitsProvider.CodeBase;
