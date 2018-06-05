@@ -141,7 +141,7 @@ namespace MeadCo.ScriptXClient
             {
                 // Note: We may have no add-on available, scriptx.print available but agent is IE 10 or less (yes, this is unlikely)
                 // so have to check scriptx.print is usable for the agent as well as generally available.
-                if ( !ConfigProviders.PrintServiceProvider.IsAvailable || !ConfigProviders.PrintServiceProvider.UseForAgent(userAgent) )
+                if ( ConfigProviders.PrintServiceProvider.Availability == ServiceConnector.None || !ConfigProviders.PrintServiceProvider.UseForAgent(userAgent) )
                     return new HtmlString("");
 
                 // by definition the 'scope' for scriptx.print is user
@@ -190,8 +190,9 @@ namespace MeadCo.ScriptXClient
                 BundleTable.Bundles.Add(new ScriptBundle(dotPrintScriptsBundleName).Include("~/Scripts/MeadCo.ScriptX/meadco-core.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprint.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintlicensing.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxlicense.js")); 
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-secmgr.js"));
             }
 
             // and a bundle for a promise polyfill which will be required by IE 11
@@ -327,7 +328,7 @@ namespace MeadCo.ScriptXClient
             }
             else
             {
-                if (!ConfigProviders.PrintServiceProvider.IsAvailable)
+                if ( ConfigProviders.PrintServiceProvider.Availability == ServiceConnector.None)
                 {
                     return new HtmlString("");
                 }
@@ -339,20 +340,35 @@ namespace MeadCo.ScriptXClient
                     markup.AppendLine(System.Web.Optimization.Scripts.Render(promiseBundle).ToString());
                 }
 
+                // if Cloud, then just need to connect the subscription
+                // If Workstation, then requesting that the license is installed ..
+                if (ConfigProviders.PrintServiceProvider.Availability == ServiceConnector.Cloud)
+                {
+                    markup.AppendScript(
+                        ScriptSnippets.BuildDotPrintLicenseDetail(
+                            ConfigProviders.PrintServiceProvider.LicenseService.ToString(),
+                            ConfigProviders.PrintServiceProvider.Guid.ToString()));
+                }
+                else
+                {
+                    markup.AppendScript(
+                        ScriptSnippets.BuildDotPrintInstallLicense(
+                            ConfigProviders.PrintServiceProvider.LicenseService.ToString(),
+                            ConfigProviders.PrintServiceProvider.Guid.ToString(),
+                            ConfigProviders.PrintServiceProvider.FileName,
+                            ConfigProviders.PrintServiceProvider.Revision));
+                }
+
                 markup.AppendScript(
                     ScriptSnippets.BuildDotPrintInitialisation(
                         ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
-                        ConfigProviders.PrintServiceProvider.SubscriptionGuid.ToString()));
+                        ConfigProviders.PrintServiceProvider.Guid.ToString()));
 
-                markup.AppendScript(
-                    ScriptSnippets.BuildDotPrintLicenseDetail(
-                        ConfigProviders.PrintServiceProvider.SubscriptionService.ToString(),
-                        ConfigProviders.PrintServiceProvider.SubscriptionGuid.ToString()));
             }
 
             if (printSettings != null)
             {
-                markup.AppendScript(printSettings.BuildPrintSettingsCode());
+                markup.AppendScript(printSettings.BuildPrintSettingsCode(ConfigProviders.PrintServiceProvider.Availability == ServiceConnector.Windows));
             }
 
             markup.Append(sOut);

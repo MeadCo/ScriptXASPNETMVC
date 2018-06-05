@@ -52,8 +52,8 @@
       <HintPath>..\packages\MeadCoScriptXInstallers.7.7.0\lib\net40\MeadCo.ScriptXConfigHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.3.0.0-beta01\lib\net461\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+    <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.4.0.0-beta02\lib\net45\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -176,7 +176,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\meadco-scriptx-1.2.0.js" />
+    <Content Include="Scripts\meadco-scriptx-1.5.0.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.min.js">
       <DependentUpon>jQuery-MeadCo.ScriptX.Print.UI.js</DependentUpon>
@@ -189,10 +189,6 @@
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.min.js">
       <DependentUpon>meadco-scriptxfactory.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxlicense.min.js">
-      <DependentUpon>meadco-scriptxlicense.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.min.js">
       <DependentUpon>meadco-scriptxprint.js</DependentUpon>
@@ -200,6 +196,14 @@
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.min.js">
       <DependentUpon>meadco-scriptxprinthtml.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.min.js">
+      <DependentUpon>meadco-scriptxprintlicensing.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-secmgr.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-secmgr.min.js">
+      <DependentUpon>meadco-secmgr.js</DependentUpon>
     </Content>
     <Content Include="Scripts\MeadCo.ScriptX\promise.js" />
     <Content Include="Scripts\MeadCo.ScriptX\promise.min.js" />

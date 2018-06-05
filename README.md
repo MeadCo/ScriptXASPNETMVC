@@ -2,7 +2,9 @@
 A library of helpers for ASP.NET MVC Razor views to simplify the use of The MeadCo ScriptX Add-on for Internet Explorer to deliver controlled printing on client PCs.
 
 ## Current Version
-2.1.0
+2.2.0
+
+v2.2 Adds support for working with ScriptX Services for Windows PC.
 
 v2.1 Adds support for working with a ScriptX Services - it will output code for working with the service instead of working with the add-on.
 

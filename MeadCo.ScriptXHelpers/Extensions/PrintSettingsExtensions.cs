@@ -8,9 +8,18 @@ namespace MeadCo.ScriptXClient.Extensions
 {
     internal static class PrintSettingsExtensions
     {
-        public static StringBuilder BuildPrintSettingsCode(this PrintSettings ps)
+        public static StringBuilder BuildPrintSettingsCode(this PrintSettings ps,bool bLicensed)
         {
-            StringBuilder sb = new StringBuilder("function MeadCo_ScriptX_Settings() { if ( MeadCo.ScriptX.Init() ) { ");
+            StringBuilder sb = new StringBuilder();
+
+            if (bLicensed)
+            {
+                sb.Append("function MeadCo_ScriptX_Settings() { if ( MeadCo.Licensing.IsLicensed() ) { if ( MeadCo.ScriptX.Init() ) { ");
+            }
+            else
+            {
+                sb.Append("function MeadCo_ScriptX_Settings() { if ( MeadCo.ScriptX.Init() ) { ");
+            }
 
             sb.AppendLine("try {");
 
@@ -84,6 +93,10 @@ namespace MeadCo.ScriptXClient.Extensions
 
             sb.AppendLine("} catch (e) { alert(\"Warning - print setup failed: \\n\\n\" + e.message); }");
             sb.AppendLine(" } else { console.log(\"Warning : ScriptX failed to initialise in MeadCo_ScriptX_Settings(). Has install failed?\"); } ");
+            if (bLicensed)
+            {
+                sb.AppendLine("} else { MeadCo.Licensing.ReportError(); }");
+            }
             sb.AppendLine(" }");
             return sb;
         }

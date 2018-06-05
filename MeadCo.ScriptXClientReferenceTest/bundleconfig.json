@@ -34,5 +34,17 @@
     "inputFiles": [
       "Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js"
     ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-scriptxprintlicensing.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-scriptxprintlicensing.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/MeadCo.ScriptX/meadco-secmgr.min.js",
+    "inputFiles": [
+      "Scripts/MeadCo.ScriptX/meadco-secmgr.js"
+    ]
   }
 ]

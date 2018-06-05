@@ -52,7 +52,7 @@ namespace MeadCo.ScriptXClient.Helpers
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("function MeadCo_ScriptX_License_Connect() {");
-            sb.Append("secmgr.connect('");
+            sb.Append("MeadCo.ScriptX.Print.Licensing.connect('");
             sb.Append(licenseServerEndPoint);
             sb.Append("','");
             sb.Append(subscriptionId);
@@ -62,5 +62,30 @@ namespace MeadCo.ScriptXClient.Helpers
             return sb;
         }
 
+        public static StringBuilder BuildDotPrintInstallLicense(string licenseServerEndPoint, string subscriptionId,
+            string path, int revision)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("function MeadCo_ScriptX_License_Connect() {");
+            sb.Append("MeadCo.ScriptX.Print.Licensing.connect('");
+            sb.Append(licenseServerEndPoint);
+            sb.Append("','");
+            sb.Append(subscriptionId);
+            sb.AppendLine("');");
+
+            sb.Append("MeadCo.ScriptX.Print.Licensing.apply('");
+            sb.Append(subscriptionId);
+            sb.Append("',");
+            sb.Append(revision);
+            sb.Append(",'");
+            sb.Append(path);
+            sb.AppendLine("');");
+
+            sb.AppendLine("}");
+            sb.AppendLine("window.addEventListener('load',MeadCo_ScriptX_License_Connect,false);");
+
+            return sb;
+        }
     }
 }

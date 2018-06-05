@@ -13,7 +13,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-// v1.2.0 and later include support for working with MeadCo.ScriptX.Print via a polyfill
+// v1.4.0 and later require a promise polyfill if not implemented in the browser
+//  we recommend (and test with) https://github.com/taylorhakes/promise-polyfill
+//
+// v1.3.0 and later introduce an async model to enable async scenarios with ScriptX.Print Services.
+//
+// v1.2.0 and later include support for working with ScriptX Services via a polyfill
 //  - include meadco-scriptxfactory.js before this file and call MeadCo.ScriptX.Print.HTML.connect() 
 //  see https://github.com/MeadCo/ScriptX.Print.Client
 //
@@ -53,7 +58,7 @@
 //	MeadCo.Licensing.ReportError();
 // }
 
-// MeadCo.ScriptX 
+// MeadCo.ScriptX - singleton
 //
 (function (topLevelNs) {
     "use strict";
@@ -65,7 +70,16 @@
 
     var scriptx = topLevelNs.ScriptX;
 
-    scriptx.LibVersion = "1.2.0";
+    scriptx.Connection = {
+        NONE: 0,
+        ADDON: 1,
+        SERVICE: 2
+    }
+
+    scriptx.LibVersion = "1.5.0";
+    scriptx.Connector = scriptx.Connection.NONE;
+
+    scriptx.Factory = null;
     scriptx.Printing = null;
     scriptx.Utils = null;
 
@@ -75,29 +89,70 @@
     // Simple initialisation of the library
     // returns true if the MeadCo ScriptX factory object and printing object are available
     //
+    // With ScriptX.Print Services this will use a synchronous (blocking, deprecated) call to the server
+    //
     scriptx.Init = function () {
         if (scriptx.Printing == null) {
             console.log("scriptx.Init()");
-            var f = window.factory || document.getElementById("factory"); // we assume the <object /> has an id of 'factory'
-            if (f && f.object != null) {
-                console.log("found factory");
-                scriptx.Utils = f.object;
-                scriptx.Printing = f.printing;
-
+            if (findFactory()) {
                 // if we are connected to the ScriptX.Print implementation
                 // then check it has connected.
-                if (typeof f.printing.PolyfillInit === "function") {
-                    console.log("found polyfillinit()");
-                    if (!f.printing.PolyfillInit()) {
-                        console.log("**warning** polyfill failed.")
+                if (typeof scriptx.Printing.PolyfillInit === "function") {
+                    console.log("found ScriptX.Print Services");
+                    console
+                        .warn("Synchronous initialisation is deprecated - please update to MeadCo.ScriptX.InitAsync().");
+                    if (!scriptx.Printing.PolyfillInit()) {
+                        console.log("**warning** polyfill failed.");
                         scriptx.Printing = null;
+                        scriptx.Connector = scriptx.Connection.NONE;
+                    } else {
+                        scriptx.Connector = scriptx.Connection.SERVICE;
                     }
+                } else {
+                    scriptx.Connector = scriptx.Connection.ADDON;
                 }
             } else {
                 console.log("** Warning -- no factory **");
             }
         }
+
         return scriptx.Printing != null;
+    }
+
+    scriptx.InitAsync = function () {
+        var prom;
+
+        console.log("scriptx.InitAsync()");
+        if (scriptx.Printing == null) {
+            console.log("unknown state ...");
+            prom = new Promise(function (resolve, reject) {
+                console.log("looking for state ...");
+                if (findFactory()) {
+                    console.log("look for Polyfill ..");
+                    if (typeof scriptx.Printing.PolyfillInitAsync === "function") {
+                        console.log("found async ScriptX.Print Services");
+                        scriptx.Printing.PolyfillInitAsync(function () {
+                            scriptx.Connector = scriptx.Connection.SERVICE;
+                            resolve();
+                        }, reject);
+                    } else {
+                        scriptx.Connector = scriptx.Connection.ADDON;
+                        console.log("no polyfill, using add-on");
+                        resolve();
+                    }
+                } else {
+                    console.log("** Warning -- no factory **");
+                    reject();
+                }
+            });
+        } else {
+            prom = new Promise(function (resolve, reject) {
+                resolve();
+            });
+        }
+
+        console.log("scriptx.InitAsync() returns promise");
+        return prom;
     }
 
     // InitWithVersion(strVersion)
@@ -125,12 +180,32 @@
         return scriptx.GetComponentVersion("ScriptX.Factory");
     }
 
-    // PrintPage
+    // Print Page/frame - these will work with both add-on and service
+    // but return value will be wrong for service since dialogs are async
+    // If the return value matters use xxxx2 api below.
+
     // Print the current document, with optional prompting (no prompt in the internetzone requires a license)
     scriptx.PrintPage = function (bPrompt) {
         if (scriptx.Init())
             return scriptx.Printing.Print(bPrompt);
         return false;
+    }
+
+    scriptx.PrintPage2 = function (bPrompt) {
+        return new Promise(function(resolve, reject) {
+            if (scriptx.Init()) {
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.Print(bPrompt,null,function (dlgOk) {
+                        resolve(dlgOk);
+                    });
+
+                } else {
+                    resolve(scriptx.Printing.Print(bPrompt));
+                }
+            }
+            else 
+                reject();
+        });
     }
 
     // PreviewPage
@@ -156,6 +231,24 @@
         return false;
     }
 
+    scriptx.PrintFrame2 = function (frame,bPrompt) {
+        return new Promise(function (resolve, reject) {
+            if (scriptx.Init()) {
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.Print(bPrompt, frame, function (dlgOk) {
+                        resolve(dlgOk);
+                    });
+
+                } else {
+                    resolve(scriptx.PrintFrame(frame,bPrompt));
+                }
+            }
+            else
+                reject();
+        });
+    }
+
+
     // BackgroundPrintURL - requires license
     // Background download and print the document from the URL. optional print prompt before queuing the print
     // and optional callback function to monitor progress.
@@ -176,6 +269,31 @@
         return false;
     }
 
+    scriptx.BackgroundPrintURL2 = function (sUrl, bPrompt, fnCallback, data) {
+        return new Promise(function(resolve, reject) {
+            if (scriptx.Init()) {
+
+                if (typeof fnCallback == "undefined") {
+                    fnCallback = progressMonitor;
+                }
+                if (typeof data == "undefined") {
+                    data = "Job " + jobIndex++;
+                }
+
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.PrintHTMLEx(sUrl, bPrompt, fnCallback, data, function(dlgOk) {
+                        resolve(dlgOk);
+                    });
+                } else {
+                    resolve(scriptx.Printing.PrintHTMLEx(sUrl, bPrompt, fnCallback, data));
+                }
+            }
+            else
+                reject();
+        });
+    }
+
+
     // BackgroundPrintHTML - requires license
     // Background print the html document contained in the string. The document must be complete and well formed.
     // All resource references in the HTML must be fully qualified unless a base element is included.
@@ -183,6 +301,9 @@
         return scriptx.BackgroundPrintURL("html://" + sHtml, false, fnCallback, data);
     }
 
+    // Page/Print Setup - these will work with both add-on and service
+    // but return value will be wrong for service since dialogs are async
+    // If the return value matters use xxxx2 api below.
     scriptx.PageSetup = function () {
         if (scriptx.Init())
             return scriptx.Printing.PageSetup();
@@ -193,6 +314,77 @@
         if (scriptx.Init())
             return scriptx.Printing.PrintSetup();
         return false;
+    }
+
+    // Promise versions to work with async dialogs with service
+    // These work with both add-on and service.
+    //
+    scriptx.PageSetup2 = function () {
+        return new Promise(function (resolve, reject) {
+            if (scriptx.Init()) {
+
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.PageSetup(function (dlgOK) {
+                        if (dlgOK)
+                            resolve();
+                        else
+                            reject();
+                    });
+                } else {
+                    if (scriptx.Printing.PageSetup()) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                }
+            }
+            else
+                reject();
+        });
+    }
+
+    scriptx.PrintSetup2 = function () {
+        return new Promise(function (resolve, reject) {
+            if (scriptx.Init()) {
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.PrintSetup(function (dlgOK) {
+                        if (dlgOK)
+                            resolve();
+                        else
+                            reject();
+                    });
+                } else {
+                    if (scriptx.Printing.PrintSetup()) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                }
+            }
+            else
+                reject();
+        });
+    }
+
+
+    // WaitForSpoolingComplete 
+    //
+    // A wrapper to hide differences between Add-on and ScriptX.Print Services 
+    //
+    scriptx.WaitForSpoolingComplete = function () {
+        if (scriptx.Connector === scriptx.Connection.SERVICE) {
+            return new Promise(function (resolve, reject) {
+                scriptx.Printing.WaitForSpoolingComplete(-1, resolve);
+            });
+        }
+
+        return new Promise(function (resolve, reject) {
+            window.setTimeout(function () {
+                scriptx.Printing.WaitForSpoolingComplete();
+                resolve();
+            }, 1);
+        });
+
     }
 
     // HasOrientation
@@ -252,6 +444,21 @@
     }
 
     // Private implementation
+
+    // findFactory
+    //
+    // hook up and instance of 'factory', either the add-on or polyfill.
+    function findFactory(parameters) {
+        var f = window.factory || document.getElementById("factory"); // we assume the <object /> has an id of 'factory'
+        if (f && f.object != null) {
+            scriptx.Factory = f;
+            scriptx.Utils = f.object;
+            scriptx.Printing = f.printing;
+            console.log("found a scriptx factory");
+            return true;
+        }
+        return false;
+    }
 
     // compareVersions
     //
@@ -341,7 +548,7 @@
 
 }(window.MeadCo = window.MeadCo || {}));
 
-// MeadCo.Licensing 
+// MeadCo.Licensing - singleton
 //
 (function (topLeveNs) {
     "use strict";
@@ -350,27 +557,109 @@
 
     var licensing = topLeveNs.Licensing;
 
-    licensing.LibVersion = "1.1.0";
+    licensing.Connection = {
+        NONE: 0,
+        ADDON: 1,
+        SERVICE: 2
+    }
+
+    licensing.LibVersion = "1.5.0";
     licensing.LicMgr = null;
+    licensing.Connector = licensing.Connection.NONE;
 
     licensing.Init = function () {
         if (licensing.LicMgr == null) {
-            var l = window.secmgr || document.getElementById("secmgr");  // we assume the <object /> has an id of 'secmgr'
-            if (l && l.object)
-                licensing.LicMgr = l.object;
+            console.log("licensing.Init()");
+            if ( findSecMgr() ) {
+                // what have we connected to?
+
+                // if we are connected to the ScriptX.Print implementation
+                // then check it has connected.
+                if (typeof licensing.LicMgr.PolyfillInit === "function") {
+                    console.log("found secmgr services");
+                    console
+                        .warn("Synchronous initialisation is deprecated - please update to MeadCo.Licensing.InitAsync().");
+                    if ( !licensing.LicMgr.PolyfillInit() ) {
+                        console.log("**warning** polyfill failed.");
+                        licensing.LicMgr = null;
+                        licensing.Connector = licensing.Connection.NONE;
+                    } else {
+                        licensing.Connector = licensing.Connection.SERVICE;
+                    }
+                } else {
+                    licensing.Connector = licensing.Connection.ADDON;
+                }
+            } else {
+                console.log("** Warning -- no secmgr **");
+            }
         }
         return licensing.LicMgr != null && typeof (licensing.LicMgr.result) != "undefined";
+    }
+
+    licensing.InitAsync = function () {
+        var prom;
+
+        console.log("licensing.InitAsync()");
+
+        return new Promise(function (resolve, reject) {
+            if (licensing.LicMgr == null) {
+                if (findSecMgr()) {
+                    console.log("Look for polyfill");
+                    if (typeof licensing.LicMgr.PolyfillInitAsync === "function") {
+                        console.log("Found async secmgr services");
+                        licensing.LicMgr.PolyfillInitAsync(function () {
+                            console.log("polyfill initialised ok");
+                            licensing.Connector = licensing.Connection.SERVICE;
+                            resolve();
+                        }, reject);
+                    } else {
+                        console.log("No polyfill, using as add-on");
+                        licensing.Connector = licensing.Connection.ADDON;
+                        resolve();
+                    }
+                } else {
+                    console.log("** Warning -- no secmgr **");
+                    reject();
+                }
+            } else {
+                if (licensing.Connector === licensing.Connection.NONE) {
+                    reject();
+                } else {
+                    resolve();
+                }
+            }
+        });
+
     }
 
     // IsLicensed
     // Returns true if the document is licensed and advanced functionality will be available
     licensing.IsLicensed = function () {
+
         if (licensing.Init()) {
-            return licensing.LicMgr.result == 0 && licensing.LicMgr.validLicense;
+            var l = licensing.LicMgr.License;
+            return licensing.LicMgr.result === 0 && licensing.LicMgr.validLicense;
         }
 
         console.log("WARNING :: MeadCo.Licensing.Init() failed so IsLicensed will return false.");
         return false;
+    }
+
+    // IsLicensedAsync
+    // Returns a promise with a resolve of the loaded license detail
+    //
+    licensing.IsLicensedAsync = function () {
+        return new Promise(function (resolve, reject) {
+            licensing.InitAsync()
+                .then(function() {
+                    if (typeof licensing.LicMgr.GetLicenseAsync === "function") {
+                        licensing.LicMgr.GetLicenseAsync(resolve, reject);
+                    } else {
+                        resolve(licensing.LicMgr.License);
+                    }
+                })
+                .catch(function () { reject(); });
+        });
     }
 
     // ErrorMessage
@@ -379,7 +668,8 @@
 			"The license for this site is not valid.",
 			"The license for this site not installed on this machine.",
 			"The license for this site has not been accepted by the user.",
-			"There was an error loading the license. "
+			"There was an error loading the license. ",
+            "Unable to connect to the ScriptX.Print subscription server"
 			);
 
     licensing.ErrorMessage = function () {
@@ -397,6 +687,10 @@
                     case 0:
                         if (!licensing.LicMgr.validLicense)
                             eIndex = 1;
+                        break;
+
+                    case 5: // scriptx.print service error
+                        eIndex = 5;
                         break;
 
                     case 1:
@@ -447,6 +741,7 @@
 
     }
 
+    // private implementation
     function reportError(eMsg) {
         var msg = eMsg;
         for (var i = 1; i < arguments.length; i++) {
@@ -454,6 +749,18 @@
                 msg += "\n\n" + arguments[i];
         }
         alert(msg);
+    }
+
+    // try to find the Security Manager add-on on the page.
+    // 
+    function findSecMgr() {
+        var l = window.secmgr || document.getElementById("secmgr");  // we assume the <object /> has an id of 'secmgr'
+        if (l && l.object != null) {
+            licensing.LicMgr = l.object;
+            console.log("Found a secmgr");
+            return licensing.LicMgr != null && typeof (licensing.LicMgr.result) != "undefined";
+        }
+        return false;
     }
 
 }(window.MeadCo = window.MeadCo || {}));

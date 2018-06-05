@@ -9,6 +9,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "scriptxprint-html": "1.0.1"
+    "scriptxprint-html": "v1.4-beta.6"
   }
 }
