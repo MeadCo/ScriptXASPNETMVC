@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44334</IISExpressSSLPort>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -53,7 +54,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MeadCo.ScriptXConfigurationHandler, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.4.0.0-beta02\lib\net45\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
+      <HintPath>..\packages\MeadCoScriptXConfigurationHandler.4.0.0\lib\net45\MeadCo.ScriptXConfigurationHandler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -176,31 +177,16 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\meadco-scriptx-1.5.0.js" />
+    <Content Include="Scripts\meadco-scriptx-1.5.1.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.min.js">
       <DependentUpon>jQuery-MeadCo.ScriptX.Print.UI.js</DependentUpon>
     </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-core.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-core.min.js">
-      <DependentUpon>meadco-core.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.min.js">
-      <DependentUpon>meadco-scriptxfactory.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.min.js">
-      <DependentUpon>meadco-scriptxprint.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.min.js">
-      <DependentUpon>meadco-scriptxprinthtml.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.min.js">
-      <DependentUpon>meadco-scriptxprintlicensing.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-secmgr.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-secmgr.min.js">
       <DependentUpon>meadco-secmgr.js</DependentUpon>
@@ -267,7 +253,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>28587</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44334/</IISUrl>
+          <IISUrl>http://localhost:44334/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

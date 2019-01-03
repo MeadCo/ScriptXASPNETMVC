@@ -4,9 +4,9 @@ A library of helpers for ASP.NET MVC Razor views to simplify the use of The Mead
 ## Current Version
 2.2.0
 
-v2.2 Adds support for working with ScriptX Services for Windows PC.
+v2.2 Added support for working with ScriptX Services for Windows PC.
 
-v2.1 Adds support for working with a ScriptX Services - it will output code for working with the service instead of working with the add-on.
+v2.1 Addedsupport for working with a ScriptX Services - it will output code for working with the service instead of working with the add-on.
 
 v2.1 is source compatible with views written against v1. 
 
@@ -22,13 +22,13 @@ An [overview][5] based on the v1 version of the helpers but that still applies t
 Note that the ability for the [configuration handler][4] to be configured with multiple versions of the ScriptX enables this version of the helpers to offer the best version of ScriptX to the user depending upon the version of Internet Explorer they are using.
 
 ## Copyright
-Copyright © 2016, 2017 [Mead & Co Ltd][6].
+Copyright © 2016, 2018 [Mead & Co Ltd][6].
 
 ## License 
 **MeadCo ScriptX Helpers for ASP.NET MVC** is under MIT license - http://www.opensource.org/licenses/mit-license.php
 
 [1]: https://www.nuget.org/packages/MeadCoScriptXASPNETMVC/
-[2]: http://scriptxsamples.v8.meadroid.com/
+[2]: http://scriptxprintsamples.meadroid.com/
 [3]: http://scriptx.meadroid.com
 [4]: https://github.com/MeadCo/ScriptXConfig
 [5]: http://scriptx.meadroid.com/knowledge-bank/guide-for-client-side-printing/quick-start-with-visual-studio/aspnet-mvc-web-application.aspx
