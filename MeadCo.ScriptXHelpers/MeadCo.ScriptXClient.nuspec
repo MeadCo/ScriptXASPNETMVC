@@ -13,7 +13,7 @@
     <description>The package provides helpers to define the print settings such as headers and footers, margins, paper size etc and for print and preview buttons. In combination the helpers simplify working with ScriptX and provide exemplars for implementing more complex functionality.</description>
     <summary>Helpers for printing HTML pages using the MeadCo ScriptX Add-on for Internet Explorer in ASP.NET MVC web sites/applications. Please make sure you select the correct package for your project.</summary>
     <releaseNotes>Support for transparent working with ScriptX Add-on for Internet Explorer and ScriptX.Print Services.</releaseNotes>
-    <copyright>Copyright © 2016-217, Mead &amp; Co Ltd</copyright>
+    <copyright>Copyright © 2016-2019, Mead &amp; Co Ltd</copyright>
     <tags>ASPNet WebPages MeadCo ScriptX Print Html WebForms MVC</tags>
     <dependencies>
       <dependency id="MeadCoScriptXConfigurationHandler" version="4.0.0" />

@@ -190,6 +190,7 @@ namespace MeadCo.ScriptXClient
                 BundleTable.Bundles.Add(new ScriptBundle(dotPrintScriptsBundleName).Include("~/Scripts/MeadCo.ScriptX/meadco-core.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprint.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintpdf.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintlicensing.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js")
                 .Include("~/Scripts/MeadCo.ScriptX/meadco-secmgr.js"));

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mead and Co Ltd")]
 [assembly: AssemblyProduct("MeadCo ScriptX Toolkit")]
-[assembly: AssemblyCopyright("Copyright 2016-2018, Mead and Co Ltd")]
+[assembly: AssemblyCopyright("Copyright 2016-2019, Mead and Co Ltd")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,6 +32,6 @@ using System.Runtime.InteropServices;
 //
 // See: http://www.xavierdecoster.com/post/2012/04/26/nuget-version-token-explained
 //
-[assembly: AssemblyVersion("2.2.0.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]
-[assembly: AssemblyInformationalVersion("2.2.0")]
+[assembly: AssemblyVersion("2.3.0.0")]
+[assembly: AssemblyFileVersion("2.3.0.0")]
+[assembly: AssemblyInformationalVersion("2.3.0")]

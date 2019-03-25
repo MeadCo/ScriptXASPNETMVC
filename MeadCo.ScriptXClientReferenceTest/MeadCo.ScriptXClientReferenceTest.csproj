@@ -18,8 +18,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44334</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -187,9 +186,22 @@
       <DependentUpon>meadco-core.js</DependentUpon>
     </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.min.js">
+      <DependentUpon>meadco-scriptxfactory.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.min.js">
+      <DependentUpon>meadco-scriptxprint.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.min.js">
+      <DependentUpon>meadco-scriptxprinthtml.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.min.js">
+      <DependentUpon>meadco-scriptxprintlicensing.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintpdf.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-secmgr.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-secmgr.min.js">
       <DependentUpon>meadco-secmgr.js</DependentUpon>
