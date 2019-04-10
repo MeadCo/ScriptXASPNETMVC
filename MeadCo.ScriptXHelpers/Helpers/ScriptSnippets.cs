@@ -32,16 +32,23 @@ namespace MeadCo.ScriptXClient.Helpers
             return sb;
         }
 
-        public static StringBuilder BuildDotPrintInitialisation(string htmlServerEndPoint,string subscriptionId)
+        public static StringBuilder BuildDotPrintInitialisation(bool bAsync,string htmlServerEndPoint,string subscriptionId)
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("function MeadCo_ScriptX_Connect() {");
-            sb.Append("MeadCo.ScriptX.Print.HTML.connect('");
+            sb.Append("MeadCo.ScriptX.Print.HTML.connect" + (bAsync ? "Async" : "") + "('");
             sb.Append(htmlServerEndPoint);
             sb.Append("','");
             sb.Append(subscriptionId);
-            sb.AppendLine("');");
+            if (bAsync)
+            {
+                sb.AppendLine("',function() {},function(e) {console.error(\"Error in server connection:\" + e);});");
+            }
+            else
+            {
+                sb.AppendLine("');");
+            }
             sb.AppendLine("}");
             sb.AppendLine("window.addEventListener('load',MeadCo_ScriptX_Connect,false);");
             return sb;
@@ -62,10 +69,21 @@ namespace MeadCo.ScriptXClient.Helpers
             return sb;
         }
 
-        public static StringBuilder BuildDotPrintInstallLicense(string licenseServerEndPoint, string subscriptionId,
+        public static StringBuilder BuildDotPrintInstallLicense(bool bAsync, string licenseServerEndPoint, string htmlServerEndPoint, string subscriptionId,
             string path, int revision)
         {
             StringBuilder sb = new StringBuilder();
+
+            if (bAsync)
+            {
+                sb.AppendLine("function MeadCo_ScriptX_Connect() {");
+                sb.Append("MeadCo.ScriptX.Print.HTML.connectAsync('");
+                sb.Append(htmlServerEndPoint);
+                sb.Append("','");
+                sb.Append(subscriptionId);
+                sb.AppendLine("',function() {},function(e) {console.error(\"Error in server connection:\" + e);});");
+                sb.AppendLine("}");
+            }
 
             sb.AppendLine("function MeadCo_ScriptX_License_Connect() {");
             sb.Append("MeadCo.ScriptX.Print.Licensing.connect('");
@@ -74,13 +92,16 @@ namespace MeadCo.ScriptXClient.Helpers
             sb.Append(subscriptionId);
             sb.AppendLine("');");
 
-            sb.Append("MeadCo.ScriptX.Print.Licensing.apply('");
+            sb.Append("MeadCo.ScriptX.Print.Licensing.apply" + (bAsync ? "Async" : "") + "('");
             sb.Append(subscriptionId);
             sb.Append("',");
             sb.Append(revision);
             sb.Append(",'");
             sb.Append(path);
-            sb.AppendLine("');");
+            sb.AppendLine(bAsync
+                ? "',function() { MeadCo_ScriptX_Connect(); },function(e) {console.error(\"Unable to apply license-:\" + e);});"
+                : "');");
+
 
             sb.AppendLine("}");
             sb.AppendLine("window.addEventListener('load',MeadCo_ScriptX_License_Connect,false);");

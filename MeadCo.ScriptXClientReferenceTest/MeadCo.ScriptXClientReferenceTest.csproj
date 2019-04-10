@@ -154,6 +154,7 @@
     <Content Include="Content\MeadCo.ScriptX\installers\ScriptX_8.0.0.msi" />
     <Content Include="bower.json" />
     <Content Include="package.json" />
+    <Content Include=".bowerrc" />
     <None Include="bundleconfig.json" />
     <Content Include="gulpfile.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -164,19 +165,22 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\meadco-scriptx-1.5.1.js" />
+    <Content Include="Scripts\meadco-scriptx-1.5.4.js" />
+    <Content Include="Scripts\meadco-scriptx-1.5.4.min.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.min.js">
       <DependentUpon>jQuery-MeadCo.ScriptX.Print.UI.js</DependentUpon>
@@ -233,9 +237,8 @@
     <Content Include="Views\Home\TestNoFooter.cshtml" />
     <Content Include="Views\Home\TestBlankFooter.cshtml" />
     <Content Include="Views\Home\TestButtonsWithNoSettings.cshtml" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Home\Simple.cshtml" />
+    <Content Include="Views\Home\SimpleAsync.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,8 +1,12 @@
 # MeadCo ScriptX Helpers for ASP.NET MVC 
-A library of helpers for ASP.NET MVC Razor views to simplify the use of The MeadCo ScriptX Add-on for Internet Explorer to deliver controlled printing on client PCs.
+A library of helpers for ASP.NET MVC Razor views to simplify the use of The MeadCo ScriptX Add-on for Internet Explorer to deliver controlled printing on client PCs. This library is not appropriate for use with .NET Core.
 
 ## Current Version
-2.2.0
+2.4.0
+
+v2.4 Added suport for async startup when using ScriptX Services.
+
+v2.3 Added support for working with enhanced PDF printing in ScriptX Services
 
 v2.2 Added support for working with ScriptX Services for Windows PC.
 

@@ -34,7 +34,9 @@ namespace MeadCo.ScriptXClient
         {
             None = 0, // no
             // inpage=1,
-            Redirect = 2 // yes and redirect to the install helper
+            Redirect = 2, // yes and redirect to the install helper
+            NoneAsync = 10, // no and the scriptx.services libraries use async initialisation
+            RedirectAsync = 12 // yes and async initialisation is attempted to determine if implementation is available
         }
 
         /// <summary>
@@ -231,7 +233,7 @@ namespace MeadCo.ScriptXClient
                 // by definition IE and to use some wrapper functions requires promise implementation.
                 markup.AppendLine(System.Web.Optimization.Scripts.Render(promiseBundle).ToString());
 
-                string codebase = clientValidationAction == ValidationAction.Redirect
+                string codebase = clientValidationAction == ValidationAction.Redirect || clientValidationAction == ValidationAction.RedirectAsync
                     ? $"#Version={bitsProvider.CodebaseVersion}"
                     : bitsProvider.CodeBase;
 
@@ -309,7 +311,7 @@ namespace MeadCo.ScriptXClient
 
                 output.RenderEndTag(); // div
 
-                if (clientValidationAction == ValidationAction.Redirect)
+                if (clientValidationAction == ValidationAction.Redirect || clientValidationAction == ValidationAction.RedirectAsync)
                 {
                     string helper = installHelper;
 
@@ -336,7 +338,7 @@ namespace MeadCo.ScriptXClient
 
                 // not IE add-on, using ScriptX.Print ...
                 markup.AppendLine(System.Web.Optimization.Scripts.Render(dotPrintScriptsBundleName).ToString());
-                if (MeadCo.ScriptX.Helpers.AgentParser.IsInternetExplorer11(UserAgent))
+                if (MeadCo.ScriptX.Helpers.AgentParser.IsInternetExplorer(UserAgent))
                 {
                     markup.AppendLine(System.Web.Optimization.Scripts.Render(promiseBundle).ToString());
                 }
@@ -348,22 +350,45 @@ namespace MeadCo.ScriptXClient
                     markup.AppendScript(
                         ScriptSnippets.BuildDotPrintLicenseDetail(
                             ConfigProviders.PrintServiceProvider.LicenseService.ToString(),
-                            ConfigProviders.PrintServiceProvider.Guid.ToString()));
+                            ConfigProviders.PrintServiceProvider.Guid.ToString("B")));
+
+                    markup.AppendScript(
+                        ScriptSnippets.BuildDotPrintInitialisation(clientValidationAction == ValidationAction.NoneAsync || clientValidationAction == ValidationAction.RedirectAsync,
+                            ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
+                            ConfigProviders.PrintServiceProvider.Guid.ToString("B")));
                 }
                 else
                 {
-                    markup.AppendScript(
-                        ScriptSnippets.BuildDotPrintInstallLicense(
-                            ConfigProviders.PrintServiceProvider.LicenseService.ToString(),
-                            ConfigProviders.PrintServiceProvider.Guid.ToString(),
-                            ConfigProviders.PrintServiceProvider.FileName,
-                            ConfigProviders.PrintServiceProvider.Revision));
+                    if (clientValidationAction == ValidationAction.None ||
+                        clientValidationAction == ValidationAction.Redirect)
+                    {
+                        markup.AppendScript(
+                            ScriptSnippets.BuildDotPrintInstallLicense(
+                                false,
+                                ConfigProviders.PrintServiceProvider.LicenseService.ToString(),
+                                ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
+                                ConfigProviders.PrintServiceProvider.Guid.ToString("B"),
+                                ConfigProviders.PrintServiceProvider.FileName,
+                                ConfigProviders.PrintServiceProvider.Revision));
+
+                        markup.AppendScript(
+                            ScriptSnippets.BuildDotPrintInitialisation(false,
+                                ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
+                                ConfigProviders.PrintServiceProvider.Guid.ToString("B")));
+                    }
+                    else
+                    {
+                        markup.AppendScript(
+                            ScriptSnippets.BuildDotPrintInstallLicense(
+                                true,
+                                ConfigProviders.PrintServiceProvider.LicenseService.ToString(),
+                                ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
+                                ConfigProviders.PrintServiceProvider.Guid.ToString("B"),
+                                ConfigProviders.PrintServiceProvider.FileName,
+                                ConfigProviders.PrintServiceProvider.Revision));
+                    }
                 }
 
-                markup.AppendScript(
-                    ScriptSnippets.BuildDotPrintInitialisation(
-                        ConfigProviders.PrintServiceProvider.PrintHtmlService.ToString(),
-                        ConfigProviders.PrintServiceProvider.Guid.ToString()));
 
             }
 

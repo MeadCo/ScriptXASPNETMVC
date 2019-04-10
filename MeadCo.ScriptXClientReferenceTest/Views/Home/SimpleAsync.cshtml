@@ -1,0 +1,16 @@
+﻿@using MeadCo.ScriptXClient
+
+@{
+    ViewBag.Title = "Simple";
+}
+
+<h2>Simple</h2>
+
+<div id="buttonbar" class="btn-group-sm hidden-print open-hidden">
+    @MeadCo.ScriptXClient.PrintButton.GetHtml(text: "Print this page", htmlAttributes: new { @class = "btn btn-primary", @type = "button", id = "btn-print" })
+    @MeadCo.ScriptXClient.PrintPreviewButton.GetHtml(text: "Preview this page", htmlAttributes: new { @class = "btn btn-primary", @type = "button", id = "btn-preview" })
+</div>
+
+@MeadCo.ScriptXClient.ClientPrinting.GetHtml(clientValidationAction: ClientPrinting.ValidationAction.NoneAsync)
+
+
