@@ -394,7 +394,19 @@ namespace MeadCo.ScriptXClient
 
             if (printSettings != null)
             {
-                markup.AppendScript(printSettings.BuildPrintSettingsCode(ConfigProviders.PrintServiceProvider.Availability == ServiceConnector.Windows));
+                bool bCheckLicense;
+
+                // check if fWPC (=> cloud on Windows)
+                // or Addon and License required.
+                if (bUseAddOn)
+                {
+                    bCheckLicense = ConfigProviders.LicenseProvider.IsLicensed;
+                }
+                else
+                {
+                    bCheckLicense = ConfigProviders.PrintServiceProvider.Availability == ServiceConnector.Windows;
+                }
+                markup.AppendScript(printSettings.BuildPrintSettingsCode(bCheckLicense));
             }
 
             markup.Append(sOut);
