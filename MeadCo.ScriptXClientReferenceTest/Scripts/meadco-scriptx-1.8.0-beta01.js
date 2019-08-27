@@ -76,7 +76,12 @@
         SERVICE: 2
     };
 
-    scriptx.LibVersion = "1.5.2";
+    scriptx.MeasurementUnits = {
+        MM: 1,
+        INCHES: 2
+    };
+
+    scriptx.LibVersion = "1.8.0";
     scriptx.Connector = scriptx.Connection.NONE;
 
     scriptx.Factory = null;
@@ -117,7 +122,7 @@
         }
 
         return scriptx.Printing !== null;
-    };;
+    };
 
     scriptx.InitAsync = function () {
         var prom;
@@ -133,21 +138,21 @@
                         console.log("found async ScriptX.Print Services");
                         scriptx.Printing.PolyfillInitAsync(function () {
                             scriptx.Connector = scriptx.Connection.SERVICE;
-                            resolve();
+                            resolve(scriptx.Connector);
                         }, reject);
                     } else {
                         scriptx.Connector = scriptx.Connection.ADDON;
                         console.log("no polyfill, using add-on");
-                        resolve();
+                        resolve(scriptx.Connector);
                     }
                 } else {
                     console.log("** Warning -- no factory **");
-                    reject();
+                    reject("Unable to find a ScriptX 'factory' object.");
                 }
             });
         } else {
             prom = new Promise(function (resolve, reject) {
-                resolve();
+                resolve(scriptx.Connector);
             });
         }
 
@@ -166,19 +171,68 @@
                 alert("ScriptX v" + strVersion + " or later is required.\nYou are using a previous version and errors may occur.");
         }
         return bok;
-    }
+    };
 
     // IsVersion
     // Returns true if the installed version is at least strVersion where strVersion is a dotted version number (e.g. "7.1.2.65")
+    // If services is in use then returns true if the version of ScriptX.Addon being emulated is at least strVersion
     scriptx.IsVersion = function (strVersion) {
         return scriptx.IsComponentVersion("ScriptX.Factory", strVersion);
-    }
+    };
 
     // Version
-    // Returns the installed version number of ScriptX
+    // Returns the installed version number of ScriptX (if services is in use then returns the version of ScriptX.Addon being emulated).
+    // The returned value is a dotted version number (e.g. "7.1.2.65")
     scriptx.Version = function () {
         return scriptx.GetComponentVersion("ScriptX.Factory");
-    }
+    };
+
+    // IsServices
+    // Returns true if ScriptX.Services is/will be used 
+    scriptx.IsServices = function () {
+        var connection = scriptx.Connector;
+        // If init() not yet called, try a guess. 
+        //
+        // This relies on the Add-on and the .services client scripts are all included before this script.
+        // But, we do not want to perform a full init here because connection data might not have been specified
+        if (connection === scriptx.Connection.NONE) {
+            if (findFactory()) {
+                connection = typeof scriptx.Printing.PolyfillInit === "function" ? scriptx.Connection.SERVICE : scriptx.Connection.ADDON;
+                // reset so init can complete
+                scriptx.Printing = null;
+            }
+            else {
+                // assume service will be used, for sure the Add.on isnt here
+                connection = scriptx.Connection.SERVICE;
+            }
+        }
+
+        return connection === scriptx.Connection.SERVICE;
+    };
+
+    // ServicesVersion
+    // If services is in use, returns the version of the services server. 
+    // If addon is in use returns ""
+    //
+    // Requires services 2.9 or later, earlier versions will return the client library version (1.x)
+    scriptx.ServicesVersion = function () {
+        if (scriptx.IsServices()) {
+            return scriptx.GetComponentVersion("scriptx.services");
+        }
+
+        return "";
+    };
+
+    // IsServicesVersion
+    // Returns true if services server in use is at least strVersion where strVersion is a dotted version number (e.g. "7.1.2.65")
+    scriptx.IsServicesVersion = function (strVersion) {
+        if (scriptx.IsServices()) {
+            return scriptx.IsComponentVersion("scriptx.services", strVersion);
+        }
+
+        return false;
+    };
+
 
     // Print Page/frame - these will work with both add-on and service
     // but return value will be wrong for service since dialogs are async
@@ -189,13 +243,13 @@
         if (scriptx.Init())
             return scriptx.Printing.Print(bPrompt);
         return false;
-    }
+    };
 
     scriptx.PrintPage2 = function (bPrompt) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             if (scriptx.Init()) {
                 if (scriptx.Connector === scriptx.Connection.SERVICE) {
-                    scriptx.Printing.Print(bPrompt,null,function (dlgOk) {
+                    scriptx.Printing.Print(bPrompt, null, function (dlgOk) {
                         resolve(dlgOk);
                     });
 
@@ -203,10 +257,10 @@
                     resolve(scriptx.Printing.Print(bPrompt));
                 }
             }
-            else 
+            else
                 reject();
         });
-    }
+    };
 
     // PreviewPage
     // Preview the current document
@@ -214,14 +268,14 @@
         if (scriptx.Init()) {
             scriptx.Printing.Preview();
         }
-    }
+    };
 
     // PreviewFrame
     // Preview the content of the *named* frame.
     scriptx.PreviewFrame = function (frame) {
         if (scriptx.Init())
             scriptx.Printing.Preview(typeof (frame) === "string" ? (scriptx.IsVersion("6.5.439.30") ? frame : eval("window." + frame)) : frame);
-    }
+    };
 
     // PrintFrame
     // Print the content of the *named* frame with optional prompting (no prompt in the internetzone requires a license)
@@ -229,7 +283,7 @@
         if (scriptx.Init())
             return scriptx.Printing.Print(bPrompt, typeof (frame) === "string" ? (scriptx.IsVersion("6.5.439.30") ? frame : eval("window." + frame)) : frame);
         return false;
-    }
+    };
 
     scriptx.PrintFrame2 = function (frame, bPrompt) {
         return new Promise(function (resolve, reject) {
@@ -299,7 +353,31 @@
     // All resource references in the HTML must be fully qualified unless a base element is included.
     scriptx.BackgroundPrintHTML = function (sHtml, fnCallback, data) {
         return scriptx.BackgroundPrintURL("html://" + sHtml, false, fnCallback, data);
-    }
+    };
+
+    // Direct/RAW printing - requires a license 
+
+    // Send the given string (e.g. ZPL) directly to the printer as a byte stream 
+    scriptx.DirectPrintString = function (sPrinterName, sData) {
+
+        if (scriptx.Init()) {
+            var rawPrinter = scriptx.Factory.rawPrinting;
+
+            rawPrinter.printer = sPrinterName;
+            rawPrinter.printString(sData);
+        }
+    };
+
+    // Download content from the url and send its contents (e.g. ZPL) directly to the printer as a byte stream 
+    scriptx.DirectPrintDocument = function (sPrinterName, sUrl) {
+
+        if (scriptx.Init()) {
+            var rawPrinter = scriptx.Factory.rawPrinting;
+
+            rawPrinter.printer = sPrinterName;
+            rawPrinter.printDocument(scriptx.Factory.baseURL(sUrl));
+        }
+    };
 
     // Page/Print Setup - these will work with both add-on and service
     // but return value will be wrong for service since dialogs are async
@@ -308,13 +386,13 @@
         if (scriptx.Init())
             return scriptx.Printing.PageSetup();
         return false;
-    }
+    };
 
     scriptx.PrintSetup = function () {
         if (scriptx.Init())
             return scriptx.Printing.PrintSetup();
         return false;
-    }
+    };
 
     // Promise versions to work with async dialogs with service
     // These work with both add-on and service.
@@ -341,7 +419,7 @@
             else
                 reject();
         });
-    }
+    };
 
     scriptx.PrintSetup2 = function () {
         return new Promise(function (resolve, reject) {
@@ -364,7 +442,7 @@
             else
                 reject();
         });
-    }
+    };
 
 
     // WaitForSpoolingComplete 
@@ -385,14 +463,14 @@
             }, 1);
         });
 
-    }
+    };
 
     // HasOrientation
     // Returns true if the 'orientation' property is available, otherwise the 'portrait' property must be used.
     //
     scriptx.HasOrientation = function () {
         return scriptx.IsComponentVersion("ScriptX.Factory", "7.0.0.1");
-    }
+    };
 
     // GetAvailablePrinters - requires license
     // returns an array of the names of the printers on the system
@@ -402,7 +480,7 @@
         var name;
         if (scriptx.Init()) {
             try {
-                for (var i = 0; (name = scriptx.Printing.EnumPrinters(i)).length > 0 ; i++) {
+                for (var i = 0; (name = scriptx.Printing.EnumPrinters(i)).length > 0; i++) {
                     plist.push(name);
                 }
             } catch (e) {
@@ -410,7 +488,7 @@
             }
         }
         return plist;
-    }
+    };
 
     // GetComponentVersion
     // returns the version number of a COM component - compatible with v7.0 and earlier implementation. (ScriptX v7.1 has an easier to use implementation)
@@ -453,7 +531,7 @@
     // hook up and instance of 'factory', either the add-on or polyfill.
     function findFactory(parameters) {
         var f = window.factory || document.getElementById("factory"); // we assume the <object /> has an id of 'factory'
-        if (f && f.object !== null) {
+        if (f && typeof f.object !== "undefined" && f.object !== null) {
             scriptx.Factory = f;
             scriptx.Utils = f.object;
             scriptx.Printing = f.printing;
@@ -504,11 +582,12 @@
     }
 
     // progressMonitor
-    // callback from BatchPrintPDF
+    // callback from PrintHTMLEx / BatchPrintPDFEx
     function progressMonitor(status, statusData, callbackData) {
         switch (status) {
             case 1:
-                statusUpdate(status, "Request to print has been queued for: " + callbackData);
+                // v8.2 / 10.2 will passback the queue mode 
+                statusUpdate(status, "Request to print has been queued for: " + callbackData + (typeof statusData === "undefined" ? "" : ", " + statusData));
                 break;
 
             case 2:
@@ -566,7 +645,7 @@
         SERVICE: 2
     };
 
-    licensing.LibVersion = "1.5.0";
+    licensing.LibVersion = "1.8.0";
     licensing.LicMgr = null;
     licensing.Connector = licensing.Connection.NONE;
 
@@ -654,83 +733,21 @@
     licensing.IsLicensedAsync = function () {
         return new Promise(function (resolve, reject) {
             licensing.InitAsync()
-                .then(function() {
+                .then(function () {
                     if (typeof licensing.LicMgr.GetLicenseAsync === "function") {
                         licensing.LicMgr.GetLicenseAsync(resolve, reject);
                     } else {
                         resolve(licensing.LicMgr.License);
                     }
                 })
-                .catch(function () { reject(); });
+                .catch(function () { reject(lookupError()); });
         });
-    }
+    };
 
-    // ErrorMessage
-    // returns the error message that describes why licensing failed. returns emoty string if there was no error.
-    var errorLicenseMsgs = new Array("Unable to locate the MeadCo License Manager object - the component may not be installed.",
-			"The license for this site is not valid.",
-			"The license for this site not installed on this machine.",
-			"The license for this site has not been accepted by the user.",
-			"There was an error loading the license. ",
-            "Unable to connect to the ScriptX.Print subscription server"
-			);
 
     licensing.ErrorMessage = function () {
-        var msg = "";
-
-        console.log("MeadCo Security Manager reports licensed: " + this.IsLicensed());
-        if (!licensing.IsLicensed()) {
-            var eIndex = -1;
-            var msgSuffix = "";
-
-            if (licensing.LicMgr !== null) {
-                console.log("license result: " + this.LicMgr.result + " valid: " + this.LicMgr.validLicense);
-
-                switch (licensing.LicMgr.result) {
-                    case 0:
-                        if (!licensing.LicMgr.validLicense)
-                            eIndex = 1;
-                        break;
-
-                    case 5: // scriptx.print service error
-                        eIndex = 5;
-                        break;
-
-                    case 1:
-                        // magic value: this only applies if path param not
-                        // not given - .result==1 => license not installed
-                        eIndex = 2;
-                        break;
-
-                    case -2147220500:
-                        // magic value: this only applies if a path
-                        // was given and the license is valid and was
-                        // displayed to the user for acceptance - 
-                        // .result == -2147220500 => the user clicked cancel on the dialog
-                        eIndex = 3;
-                        break;
-
-                    // some other error, e.g. download failure - this will
-                    // have already been displayed to the user in an error box.
-                    // we could be here in the path given or not given cases if there
-                    // was an error such as reading the registry, though such errors
-                    // are unlikely.
-                    default:
-                        eIndex = 4;
-                        msgSuffix = "\nLicense manager reported: (" + this.LicMgr.result + ")";
-                        break;
-                }
-
-            } else {
-                eIndex = 0;
-            }
-
-            if (eIndex >= 0) {
-                msg = errorLicenseMsgs[eIndex] + msgSuffix;
-            }
-        }
-
-        return msg;
+        console.log("licensing.ErrorMessage - MeadCo Security Manager reports licensed: " + this.IsLicensed());
+        return !licensing.IsLicensed() ? lookupError() : "";
     };
 
     // ReportError
@@ -741,10 +758,69 @@
         if (errMsg !== "") {
             reportError(errMsg, msg);
         }
+    };
+
+    // private implementation
+    // ErrorMessage
+    // returns the error message that describes why licensing failed. returns emoty string if there was no error.
+    var errorLicenseMsgs = new Array("Unable to locate the MeadCo License Manager object - the component may not be installed.",
+        "The license for this site is not valid.",
+        "The license for this site not installed on this machine.",
+        "The license for this site has not been accepted by the user.",
+        "There was an error loading the license. ",
+        "Unable to connect to ScriptX.Services license management."
+    );
+
+    function lookupError() {
+        var eIndex = -1;
+        var msgSuffix = "";
+
+        if (licensing.LicMgr !== null) {
+            console.log("license result: " + licensing.LicMgr.result + " valid: " + licensing.LicMgr.validLicense);
+
+            switch (licensing.LicMgr.result) {
+                case 0:
+                    if (!licensing.LicMgr.validLicense)
+                        eIndex = 1;
+                    break;
+
+                case 5: // scriptx.print service error
+                    eIndex = 5;
+                    break;
+
+                case 1:
+                    // magic value: this only applies if path param not
+                    // not given - .result==1 => license not installed
+                    eIndex = 2;
+                    break;
+
+                case -2147220500:
+                    // magic value: this only applies if a path
+                    // was given and the license is valid and was
+                    // displayed to the user for acceptance - 
+                    // .result == -2147220500 => the user clicked cancel on the dialog
+                    eIndex = 3;
+                    break;
+
+                // some other error, e.g. download failure - this will
+                // have already been displayed to the user in an error box.
+                // we could be here in the path given or not given cases if there
+                // was an error such as reading the registry, though such errors
+                // are unlikely.
+                default:
+                    eIndex = 4;
+                    msgSuffix = "\nLicense manager reported: (" + licensing.LicMgr.result + ")";
+                    break;
+            }
+
+        } else {
+            eIndex = 0;
+        }
+
+        return (eIndex >= 0) ? errorLicenseMsgs[eIndex] + msgSuffix : "";
 
     }
 
-    // private implementation
     function reportError(eMsg) {
         var msg = eMsg;
         for (var i = 1; i < arguments.length; i++) {
@@ -758,10 +834,10 @@
     // 
     function findSecMgr() {
         var l = window.secmgr || document.getElementById("secmgr");  // we assume the <object /> has an id of 'secmgr'
-        if (l && l.object !== null) {
+        if (l && l.object !== null && typeof l.object !== "undefined") {
             licensing.LicMgr = l.object;
-            console.log("Found a secmgr");
-            return licensing.LicMgr !== null && typeof (licensing.LicMgr.result) !== "undefined";
+            console.log("Found a secmgr: " + (typeof licensing.LicMgr.result !== "undefined"));
+            return typeof (licensing.LicMgr.result) !== "undefined";
         }
         return false;
     }

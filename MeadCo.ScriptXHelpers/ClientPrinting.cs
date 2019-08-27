@@ -189,13 +189,13 @@ namespace MeadCo.ScriptXClient
             b = BundleTable.Bundles.GetBundleFor(dotPrintScriptsBundleName);
             if (b == null)
             {
-                BundleTable.Bundles.Add(new ScriptBundle(dotPrintScriptsBundleName).Include("~/Scripts/MeadCo.ScriptX/meadco-core.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprint.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintpdf.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintlicensing.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js")
-                .Include("~/Scripts/MeadCo.ScriptX/meadco-secmgr.js"));
+                BundleTable.Bundles.Add(new ScriptBundle(dotPrintScriptsBundleName).Include("~/Scripts/MeadCo.ScriptX/meadco-core-{version}.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprint-{version}.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml-{version}.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintpdf-{version}.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxprintlicensing-{version}.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory-{version}.js")
+                .Include("~/Scripts/MeadCo.ScriptX/meadco-secmgr-{version}.js"));
             }
 
             // and a bundle for a promise polyfill which will be required by IE 11

@@ -33,5 +33,5 @@ using System.Runtime.InteropServices;
 // See: http://www.xavierdecoster.com/post/2012/04/26/nuget-version-token-explained
 //
 [assembly: AssemblyVersion("2.4.0.0")]
-[assembly: AssemblyFileVersion("2.4.2.0")]
-[assembly: AssemblyInformationalVersion("2.4.2")]
+[assembly: AssemblyFileVersion("2.4.3.0")]
+[assembly: AssemblyInformationalVersion("2.4.3")]
